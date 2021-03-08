@@ -110,43 +110,43 @@ function cargarplay(){
 
 /////funciones de option
 function cargaroptiontitle(){
-    paper.drawImage(optiontitle.imagen,300,0)
+    paper.drawImage(optiontitle.imagen,400,0, 650,150)
 }
 function cargarsoundtitle(){
-    paper.drawImage(soundtitle,500,200)
+    paper.drawImage(soundtitle,400,200, 450,150)
 }
 function cargaroffsound(){
-    paper.drawImage(soundOff,500,0)
+    paper.drawImage(soundOff,600,200, 350,150)
 }
 function cargaroffmusic(){
-    paper.drawImage(musicOff,500,0)
+    paper.drawImage(musicOff,600,0, 350,150)
 }
 function cargarOnsound(){
-    paper.drawImage(soundOn,500,0)
+    paper.drawImage(soundOn,500,125, 350,150)
 }
 function cargarOnmusic(){
-    paper.drawImage(musicOn,500,0)
+    paper.drawImage(musicOn,750,425, 200,100)
 }
 function cargarMusicTitle(){
-    paper.drawImage(musictitle,500,400)
+    paper.drawImage(musictitle,400,400, 350,150)
 }
 function cargarBack(){
-    paper.drawImage(backOption,1050,600)
+    paper.drawImage(backOption,1050,600, 350,150)
 }
 ////Terminan funciones de opciones
 
 //////funciones de pausa
 function cargarpausetitle(){
-    paper.drawImage(pausetitle,300,0)
+    paper.drawImage(pausetitle,450,0, 350,150)
 };
 function cargarmenubutton(){
-    paper.drawImage(menuprincipal,300,100)
+    paper.drawImage(menuprincipal,450,200, 350,150)
 };
 function cargaropciones(){
-    paper.drawImage(opciones,300,200)
+    paper.drawImage(opciones,450,400, 350,150)
 };
 function cargarcontinue(){
-    paper.drawImage(continuar,300,300)
+    paper.drawImage(continuar,950,550, 350,150)
 };
 
 /////carga de pantalla
@@ -163,9 +163,9 @@ function cargarcontinue(){
     paper.drawImage(chain.imagen,1168,0);
     }
     if(playbutton&&options&&config){
-        paper.drawImage(playbutton.imagen,480,255);  
-        paper.drawImage(options.imagen,50,395);
-        paper.drawImage(config.imagen,943,495);
+        paper.drawImage(playbutton.imagen,480,255, 350,150);  
+        paper.drawImage(options.imagen,900,395, 350,150);
+        paper.drawImage(config.imagen,110, 395, 350,150);
       }
       buttonpause(480,255,350,150);
       buttonpoints(900,395,350,150); 
@@ -256,7 +256,7 @@ function clear(){
 
 /////////botones
 function buttonpause(buttonX,buttonY,buttonW,buttonH){
-    paper.fillStyle = 'red'; 
+    paper.fillStyle = 'rgb(255, 255, 255, 0)';
     paper.fillRect(buttonX, buttonY, buttonW, buttonH); 
     pant.addEventListener('click', function(event) { 
       if ( 
@@ -272,7 +272,7 @@ function buttonpause(buttonX,buttonY,buttonW,buttonH){
     }
 
 function buttonoption(buttonX,buttonY,buttonW,buttonH){
-        paper.fillStyle = 'red'; 
+        paper.fillStyle = 'rgb(255, 255, 255, 0)';
         paper.fillRect(buttonX, buttonY, buttonW, buttonH); 
         pant.addEventListener('click', function(event) { 
           if ( 
@@ -288,7 +288,7 @@ function buttonoption(buttonX,buttonY,buttonW,buttonH){
         }
 
 function buttonpointsback(buttonX,buttonY,buttonW,buttonH){
-    paper.fillStyle = 'red'; 
+    paper.fillStyle = 'rgb(255, 255, 255, 0)';
     paper.fillRect(buttonX, buttonY, buttonW, buttonH); 
     pant.addEventListener('click', function(event) { 
       if ( 
@@ -304,7 +304,7 @@ function buttonpointsback(buttonX,buttonY,buttonW,buttonH){
     }
 
 function buttonpoints(buttonX,buttonY,buttonW,buttonH){
-    paper.fillStyle = 'red'; 
+    paper.fillStyle = 'rgb(255, 255, 255, 0)';
     paper.fillRect(buttonX, buttonY, buttonW, buttonH); 
     pant.addEventListener('click', function(event) {   
       if ( 
