@@ -304,7 +304,7 @@ function buttonpointsback(buttonX,buttonY,buttonW,buttonH){
     }
 
 function buttonpoints(buttonX,buttonY,buttonW,buttonH){
-    paper.fillStyle = 'rgb(255, 255, 255, 0)';
+    paper.fillStyle = 'rgb(255, 254, 255, 0)';
     paper.fillRect(buttonX, buttonY, buttonW, buttonH); 
     pant.addEventListener('click', function(event) {   
       if ( 
