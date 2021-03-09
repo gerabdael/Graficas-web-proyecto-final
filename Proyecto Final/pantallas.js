@@ -110,28 +110,28 @@ function cargarplay(){
 
 /////funciones de option
 function cargaroptiontitle(){
-    paper.drawImage(optiontitle.imagen,400,0, 650,150)
+    paper.drawImage(optiontitle.imagen,300,0, 650,150)
 }
 function cargarsoundtitle(){
-    paper.drawImage(soundtitle,400,200, 450,150)
+    paper.drawImage(soundtitle,450,150, 300,150)
 }
 function cargaroffsound(){
-    paper.drawImage(soundOff,600,200, 350,150)
+    paper.drawImage(soundOff,300,300, 200,100)
 }
 function cargaroffmusic(){
-    paper.drawImage(musicOff,600,0, 350,150)
+    paper.drawImage(musicOff,300,580, 200,100)
 }
 function cargarOnsound(){
-    paper.drawImage(soundOn,500,125, 350,150)
+    paper.drawImage(soundOn,650,300,200,100)
 }
 function cargarOnmusic(){
-    paper.drawImage(musicOn,750,425, 200,100)
+    paper.drawImage(musicOn,650,580, 200,100)
 }
 function cargarMusicTitle(){
-    paper.drawImage(musictitle,400,400, 350,150)
+    paper.drawImage(musictitle,450,430, 300,150)
 }
 function cargarBack(){
-    paper.drawImage(backOption,1050,600, 350,150)
+    paper.drawImage(backOption,920,550, 350,150)
 }
 ////Terminan funciones de opciones
 
@@ -165,7 +165,7 @@ function cargarcontinue(){
     if(playbutton&&options&&config){
         paper.drawImage(playbutton.imagen,480,255, 350,150);  
         paper.drawImage(options.imagen,900,395, 350,150);
-        paper.drawImage(config.imagen,110, 395, 350,150);
+        paper.drawImage(config.imagen,60, 395, 350,150);
       }
       buttonpause(480,255,350,150);
       buttonpoints(900,395,350,150); 
@@ -186,12 +186,12 @@ function drawpantallaoption(){
     soundtitle= new Image();
     soundtitle.src= soundTitle;
     soundtitle.addEventListener("load",cargarsoundtitle); 
-/*     soundOn= new Image();
+     soundOn= new Image();
     soundOn.src=onNoPress;
     soundOn.addEventListener("load",cargarOnsound);
     soundOff= new Image();
     soundOff.src=offPress;
-    soundOff.addEventListener("load",cargaroffsound); */
+    soundOff.addEventListener("load",cargaroffsound); 
 
     musictitle= new Image();
     musictitle.src=musicTitle;
@@ -200,16 +200,16 @@ function drawpantallaoption(){
     musicOn= new Image();
     musicOn.src=onNoPress;
     musicOn.addEventListener("load",cargarOnmusic);
- /*    
+    
     musicOff= new Image();
     musicOff.src=offPress;
-    musicOff.addEventListener("load",cargaroffmusic); */
+    musicOff.addEventListener("load",cargaroffmusic); 
 
     backOption= new Image();
     backOption.src= backPress;
     backOption.addEventListener("load",cargarBack);
 
-    buttonpointsback(1050,600,350,150);
+    buttonpointsback(1050,600,350,150)
 
 }
 ////pantallapoints
@@ -217,6 +217,7 @@ function drawpantallapoints(){
     if(imagepoints.cargaOK){
     paper.drawImage(imagepoints.imagen,0,0);
     }
+
     buttonpointsback(1050,600,350,150);
 }
 /////// pantalla pause
@@ -288,10 +289,11 @@ function buttonoption(buttonX,buttonY,buttonW,buttonH){
         }
 
 function buttonpointsback(buttonX,buttonY,buttonW,buttonH){
-    paper.fillStyle = 'rgb(255, 255, 255, 0)';
-    paper.fillRect(buttonX, buttonY, buttonW, buttonH); 
+
     pant.addEventListener('click', function(event) { 
-      if ( 
+        paper.fillStyle = 'rgb(255, 254, 255, 0)';
+        paper.fillRect(buttonX, buttonY, buttonW, buttonH); 
+        if ( 
         event.x > buttonX &&  
         event.x < buttonX + buttonW && 
         event.y > buttonY &&  
