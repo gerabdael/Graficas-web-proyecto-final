@@ -1,0 +1,157 @@
+.parent {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.fondo {
+  position: relative;
+   width: 100%;
+  height: auto;
+  top: 0;
+  left: 0;
+}
+
+.jugar {
+  position: absolute;
+    width: 25%;
+  height: auto;
+  top: 30%;
+  left: 37%;
+}
+
+.opciones {
+  position: absolute;
+    width: 25%;
+  height: auto;
+  top: 50%;
+  left: 8%;
+}
+
+.configuraciones {
+  position: absolute;
+    width: 25%;
+  height: auto;
+  top: 50%;
+  left: 65%;
+}
+
+.continuar {
+  position: absolute;
+    width: 25%;
+  height: auto;
+  top: 30%;
+  left: 20%;
+}
+
+.volver {
+  position: absolute;
+    width: 18%;
+  height: auto;
+  top: 85%;
+  left: 80%;
+}
+
+.opciones_titulo {
+  position: absolute;
+    width: 60%;
+  height: auto;
+  top: 1%;
+  left: 20%;
+}
+
+.sonidos {
+  position: absolute;
+    width: 25%;
+  height: auto;
+  top: 30%;
+  left: 36%;
+}
+
+.musica {
+  position: absolute;
+    width: 25%;
+  height: auto;
+  top: 60%;
+  left: 36%;
+}
+
+.sonidoOff {
+  position: absolute;
+    width: 18%;
+  height: auto;
+  top: 38%;
+  left: 30%;
+}
+
+.sonidoOn {
+  position: absolute;
+    width: 18%;
+  height: auto;
+  top: 38%;
+  left: 48%;
+}
+
+.musicaOff {
+  position: absolute;
+    width: 18%;
+  height: auto;
+  top: 69%;
+  left: 30%;
+}
+
+.musicaOn {
+  position: absolute;
+    width: 18%;
+  height: auto;
+  top: 69%;
+  left: 48%;
+}
+
+.cadena1 {
+  position: absolute;
+    width: 1%;
+  height: auto;
+  top: 0%;
+  left: 11%;
+}
+
+.cadena2 {
+  position: absolute;
+    width: 1%;
+  height: auto;
+  top: 0%;
+  left: 29%;
+}
+
+.cadena3 {
+  position: absolute;
+    width: 1%;
+  height: auto;
+  top: -10%;
+  left: 40%;
+}
+
+.cadena4 {
+  position: absolute;
+    width: 1%;
+  height: auto;
+  top: -10%;
+  left: 58%;
+}
+
+.cadena5 {
+  position: absolute;
+    width: 1%;
+  height: auto;
+  top: 0%;
+  left: 68%;
+}
+
+.cadena6 {
+  position: absolute;
+    width: 1%;
+  height: auto;
+  top: 0%;
+  left: 86%;
+}
