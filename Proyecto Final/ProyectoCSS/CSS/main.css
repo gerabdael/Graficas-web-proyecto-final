@@ -12,28 +12,68 @@
   left: 0;
 }
 
+.tamañoBoton{
+      width: 40%;
+  height: auto;
+}
+
+.tamañoBoton1{
+      width: 70%;
+  height: auto;
+}
+
 .jugar {
   position: absolute;
-    width: 25%;
-  height: auto;
   top: 30%;
   left: 37%;
 }
 
+.jugar .jugar-top {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+
+.jugar:hover .jugar-top {
+  display: inline;
+}
+
 .opciones {
   position: absolute;
-    width: 25%;
-  height: auto;
   top: 50%;
   left: 8%;
 }
 
-.configuraciones {
+.opciones .opciones-top {
+  display: none;
   position: absolute;
-    width: 25%;
-  height: auto;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+
+.opciones:hover .opciones-top {
+  display: inline;
+}
+
+.puntaciones {
+  position: absolute;
   top: 50%;
   left: 65%;
+}
+
+.puntaciones .puntaciones-top {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+
+.puntaciones:hover .puntaciones-top {
+  display: inline;
 }
 
 .continuar {
@@ -44,12 +84,27 @@
   left: 20%;
 }
 
+.botonVolver{
+      width: 90%;
+  height: auto;
+}
+
 .volver {
   position: absolute;
-    width: 18%;
-  height: auto;
   top: 85%;
   left: 80%;
+}
+
+.volver .volver-top {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+
+.volver:hover .volver-top {
+  display: inline;
 }
 
 .opciones_titulo {
@@ -107,6 +162,82 @@
   top: 69%;
   left: 48%;
 }
+
+.pausa1 {
+  position: absolute;
+    width: 20%;
+  height: auto;
+  top: 2%;
+  left: 2%;
+}
+
+.pausaTitulo {
+  position: absolute;
+    width: 50%;
+  height: auto;
+  top: 2%;
+  left: 24%;
+}
+
+.tamañoBoton2{
+      width: 100%;
+  height: auto;
+}
+
+.continuar {
+  position: absolute;
+  top: 25%;
+  left: 36%;
+}
+
+.continuar .continuar-top {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+
+.continuar:hover .continuar-top {
+  display: inline;
+}
+
+.opciones2 {
+  position: absolute;
+  top: 50%;
+  left: 36%;
+}
+
+.opciones2 .opciones2-top {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+
+.opciones2:hover .opciones2-top {
+  display: inline;
+}
+
+.menuPrincipal {
+  position: absolute;
+  top: 75%;
+  left: 36%;
+}
+
+.menuPrincipal .menuPrincipal-top {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+
+.menuPrincipal:hover .menuPrincipal-top {
+  display: inline;
+}
+
 
 .cadena1 {
   position: absolute;
