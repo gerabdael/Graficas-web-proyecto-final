@@ -115,6 +115,14 @@
   left: 20%;
 }
 
+.opciones_titulo {
+  position: absolute;
+    width: 80%;
+  height: auto;
+  top: 2%;
+  left: 10%;
+}
+
 .sonidos {
   position: absolute;
     width: 25%;
@@ -285,4 +293,66 @@
   height: auto;
   top: 0%;
   left: 86%;
+}
+
+
+.francia {
+  position: absolute;
+  top: 40%;
+  left: 15%;
+}
+
+.francia .francia-top {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+
+.francia:hover .francia-top {
+  display: inline;
+}
+
+
+.china {
+  position: absolute;
+  top: 40%;
+  left: 40%;
+}
+
+.china .china-top {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+
+.china:hover .china-top {
+  display: inline;
+}
+
+
+.japon {
+  position: absolute;
+  top: 40%;
+  left: 65%;
+}
+
+.japon .japon-top {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+
+.japon:hover .japon-top {
+  display: inline;
+}
+
+.tamañoBoton3{
+      width: 55%;
+  height: auto;
 }
