@@ -3,9 +3,11 @@
 	
 	<title>Francia</title>
 	<script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
-	<script type="text/javascript" src="js/libs/three/three.js"></script>
+	<script type="text/javascript" src="js/libs/three/three2.js"></script>
 	<script type="text/javascript" src="js/libs/three/MTLLoader.js"></script>
+	<script type="text/javascript" src="js/libs/three/FBXLoader.js"></script>
 	<script type="text/javascript" src="js/libs/three/OBJLoader.js"></script>
+	<script type="text/javascript" src="js/libs/three/inflate.min.js"></script>
 	<script type="text/javascript">
 
 	var scene;
@@ -16,6 +18,10 @@
 	var clock;
 	var deltaTime;	
 	var keys = {};
+	// TODO: Modelo con animacion.var
+	mixers= [];
+	varmixers_2= [];
+	// TODO: End Modelo Animacion.
 
 	var isWorldReady = [ false, false ];
 
@@ -68,6 +74,52 @@
 			isWorldReady[1] = true;
 		});
 
+
+		var loader= new THREE.FBXLoader();
+		loader.load('assets/ChaosHeadButt1headbutt.fbx', function(personaje){
+
+			personaje.mixer= new THREE.AnimationMixer(personaje);
+			
+			mixers.push(personaje.mixer);
+			
+			var action = personaje.mixer.clipAction(personaje.animations[0]);
+			
+			action.play();
+			
+
+
+
+			personaje.position.z= -4;
+			personaje.position.x= 5;
+			personaje.position.y= 1;
+			personaje.scale.set(0.03,0.03,0.03);
+			personaje.rotation.y= THREE.Math.degToRad(90);
+
+			scene.add(personaje);
+
+		});
+
+		var loader2= new THREE.FBXLoader();
+		loader2.load('assets/ChaosHeadButt1headbutt.fbx', function(personaje2){
+
+			personaje2.mixer= new THREE.AnimationMixer(personaje2);
+			
+			mixers.push(personaje2.mixer);
+			
+			var action = personaje2.mixer.clipAction(personaje2.animations[0]);
+			
+			action.play();
+
+
+			personaje2.position.z= -4;
+			personaje2.position.x= 10;
+			personaje2.position.y= 1;
+			personaje2.scale.set(0.03,0.03,0.03);
+			personaje2.rotation.y= THREE.Math.degToRad(-90);
+
+			scene.add(personaje2);
+		});
+
 		render();
 
 		document.addEventListener('keydown', onKeyDown);
@@ -101,7 +153,12 @@
 		requestAnimationFrame(render);
 		deltaTime = clock.getDelta();	
 
-
+//ANIMACION PERSONAJE 1
+if(mixers.length > 0) {
+	for(var i= 0; i < mixers.length; i++) {
+		mixers[i].update(deltaTime);
+	}
+}
 		var forward = 0;
 
 		if (keys["A"]) {
@@ -109,6 +166,7 @@
 		} else if (keys["D"]) {
 			forward = 20;
 		}
+
 
 		if (isWorldReady[0] && isWorldReady[1]) {
 			
@@ -168,6 +226,8 @@
 		var grid = new THREE.GridHelper(50, 10, 0xffffff, 0xffffff);
 		grid.position.y = -1;
 		scene.add(grid);
+
+
 
 		$("#scene-section").append(renderer.domElement);
 	}
