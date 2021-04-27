@@ -1,173 +1,268 @@
 <html>
+
 <head>
-	
+
 	<title>China</title>
 	<script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
-	<script type="text/javascript" src="js/libs/three/three.js"></script>
+	<script type="text/javascript" src="js/libs/three/three2.js"></script>
+	<script type="text/javascript" src="js/libs/three/FBXLoader.js"></script>
 	<script type="text/javascript" src="js/libs/three/MTLLoader.js"></script>
 	<script type="text/javascript" src="js/libs/three/OBJLoader.js"></script>
+	<script type="text/javascript" src="js/libs/three/inflate.min.js"></script>
 	<script type="text/javascript">
 
-	var scene;
-	var camera;
-	var renderer;
-	var controls;
-	var objectosConColision = [];
-	var clock;
-	var deltaTime;	
-	var keys = {};
+		var scene;
+		var camera;
+		var renderer;
+		var controls;
+		var objectosConColision = [];
+		var clock;
+		var deltaTime;
+		var keys = {};
+		var actions1 = [];
+		var action1;
+		var action2;
+		var action3;
 
-	var isWorldReady = [ false, false ];
+		mixers = [];
+		var mixers_2 = [];
 
-	var rayCaster;
+		var isWorldReady = [false, false];
 
-	$(document).ready(function() {
+		var rayCaster;
 
-		rayCaster = new THREE.Raycaster();
+		$(document).ready(function () {
 
-		setupScene();
+			rayCaster = new THREE.Raycaster();
 
-		camera.misRayos = [
-			new THREE.Vector3(0, 0, 1),
-			new THREE.Vector3(0, 0, -1),
-			new THREE.Vector3(1, 0, 0),
-			new THREE.Vector3(-1, 0, 0)
-		];
+			setupScene();
 
-
-		loadOBJWithMTL("assets/", "colision.obj", "colision.mtl", (object) => {
-			object.position.z = -30;			
-
-
-			var box7 = object.clone();
-			box7.position.x = -6;
-			box7.position.z = 0;
-			box7.rotation.y = THREE.Math.degToRad(-90);
-
-			var box8 = object.clone();
-			box8.position.x = 8;
-			box8.position.z = 0;
-			box8.rotation.y = THREE.Math.degToRad(90);
+			camera.misRayos = [
+				new THREE.Vector3(0, 0, 1),
+				new THREE.Vector3(0, 0, -1),
+				new THREE.Vector3(1, 0, 0),
+				new THREE.Vector3(-1, 0, 0)
+			];
 
 
-			scene.add(box7);
-			scene.add(box8);
+			loadOBJWithMTL("assets/", "colision.obj", "colision.mtl", (object) => {
+				object.position.z = -30;
 
-			objectosConColision.push(box7);
-			objectosConColision.push(box8);
 
-			isWorldReady[0] = true;
-		});
+				var box7 = object.clone();
+				box7.position.x = -6;
+				box7.position.z = 0;
+				box7.rotation.y = THREE.Math.degToRad(-90);
 
-		loadOBJWithMTL("assets/", "escenario1.obj", "escenario1.mtl", (object) => {
-			object.position.z = -10;
-			
+				var box8 = object.clone();
+				box8.position.x = 8;
+				box8.position.z = 0;
+				box8.rotation.y = THREE.Math.degToRad(90);
 
-			scene.add(object);
-			isWorldReady[1] = true;
-		});
 
-		render();
+				scene.add(box7);
+				scene.add(box8);
 
-		document.addEventListener('keydown', onKeyDown);
-		document.addEventListener('keyup', onKeyUp);		
-	});
+				objectosConColision.push(box7);
+				objectosConColision.push(box8);
 
-	function loadOBJWithMTL(path, objFile, mtlFile, onLoadCallback) {
-		var mtlLoader = new THREE.MTLLoader();
-		mtlLoader.setPath(path);
-		mtlLoader.load(mtlFile, (materials) => {
-			
-			var objLoader = new THREE.OBJLoader();
-			objLoader.setMaterials(materials);
-			objLoader.setPath(path);
-			objLoader.load(objFile, (object) => {
-				onLoadCallback(object);
+				isWorldReady[0] = true;
 			});
 
+			loadOBJWithMTL("assets/", "escenario1.obj", "escenario1.mtl", (object) => {
+				object.position.z = -10;
+
+
+				scene.add(object);
+				isWorldReady[1] = true;
+			});
+
+			var loader = new THREE.FBXLoader();
+			loader.load('assets/ChaosAnimations.fbx', function (personaje) {
+
+				personaje.mixer = new THREE.AnimationMixer(personaje);
+
+				mixers.push(personaje.mixer);
+
+				var action = personaje.mixer.clipAction(personaje.animations[0]);
+
+				action.play();
+
+
+
+
+				personaje.position.z = -4;
+				personaje.position.x = 5;
+				personaje.position.y = 1;
+				personaje.scale.set(0.03, 0.03, 0.03);
+				personaje.rotation.y = THREE.Math.degToRad(90);
+				personaje.misRayos = [
+					new THREE.Vector3(0, 0, 1),
+					new THREE.Vector3(0, 0, -1),
+					new THREE.Vector3(1, 0, 0),
+					new THREE.Vector3(-1, 0, 0)
+				];
+
+
+				scene.add(personaje);
+
+				jugadores.push(personaje);
+
+			});
+
+			var loader2 = new THREE.FBXLoader();
+			loader2.load('assets/Gohan_Animations.fbx', function (personaje2) {
+
+				personaje2.mixer = new THREE.AnimationMixer(personaje2);
+
+				mixers.push(personaje2.mixer);
+
+				action1 = personaje2.mixer.clipAction(personaje2.animations[0]);
+				action2 = personaje2.mixer.clipAction(personaje2.animations[1]);
+				action3 = personaje2.mixer.clipAction(personaje2.animations[2]);
+				action4 = personaje2.mixer.clipAction(personaje2.animations[3]);
+
+				action1.play();
+				action2.play();
+				action3.play();
+				action4.play();
+
+				//Action.setLoop( THREE.LoopOnce);
+
+				action1.play = 1;
+				action2.play = 0;
+				action3.play = 0;
+				action4.play = 0;
+
+				action1.weight = 1;
+				action2.weight = 0;
+				action3.weight = 0;
+				action4.weight = 0;
+
+
+				personaje2.position.z = -4;
+				personaje2.position.x = 10;
+				personaje2.position.y = 1;
+				personaje2.scale.set(0.03, 0.03, 0.03);
+				personaje2.rotation.y = THREE.Math.degToRad(-90);
+				personaje2.misRayos = [
+					new THREE.Vector3(0, 0, 1),
+					new THREE.Vector3(0, 0, -1),
+					new THREE.Vector3(1, 0, 0),
+					new THREE.Vector3(-1, 0, 0)
+				];
+
+
+				scene.add(personaje2);
+
+				jugadores.push(personaje2);
+				actions1.push(action1);
+				actions1.push(action2);
+				actions1.push(action3);
+				actions1.push(action4);
+			});
+
+			render();
+
+			document.addEventListener('keydown', onKeyDown);
+			document.addEventListener('keyup', onKeyUp);
 		});
-	}
 
-	function onKeyDown(event) {
-		keys[String.fromCharCode(event.keyCode)] = true;
-	}
-	function onKeyUp(event) {
-		keys[String.fromCharCode(event.keyCode)] = false;
-	}
+		function loadOBJWithMTL(path, objFile, mtlFile, onLoadCallback) {
+			var mtlLoader = new THREE.MTLLoader();
+			mtlLoader.setPath(path);
+			mtlLoader.load(mtlFile, (materials) => {
 
-	
-	function render() {
-		requestAnimationFrame(render);
-		deltaTime = clock.getDelta();	
+				var objLoader = new THREE.OBJLoader();
+				objLoader.setMaterials(materials);
+				objLoader.setPath(path);
+				objLoader.load(objFile, (object) => {
+					onLoadCallback(object);
+				});
 
-		var forward = 0;
-		if (keys["A"]) {
-			forward = -20;
-		} else if (keys["D"]) {
-			forward = 20;
+			});
 		}
 
-		if (isWorldReady[0] && isWorldReady[1]) {
-			
-			//camera.rotation.y += yaw * deltaTime;
-			camera.translateX(forward * deltaTime);
+		function onKeyDown(event) {
+			keys[String.fromCharCode(event.keyCode)] = true;
+		}
+		function onKeyUp(event) {
+			keys[String.fromCharCode(event.keyCode)] = false;
+		}
 
-			for(var i = 0; i < camera.misRayos.length; i++){
 
-				var rayo = camera.misRayos[i];
+		function render() {
+			requestAnimationFrame(render);
+			deltaTime = clock.getDelta();
 
-				rayCaster.set(camera.position, rayo);
+			var forward = 0;
+			if (keys["A"]) {
+				forward = -20;
+			} else if (keys["D"]) {
+				forward = 20;
+			}
 
-				var colisiones = rayCaster.intersectObjects(
-					objectosConColision, 
-					true
+			if (isWorldReady[0] && isWorldReady[1]) {
+
+				//camera.rotation.y += yaw * deltaTime;
+				camera.translateX(forward * deltaTime);
+
+				for (var i = 0; i < camera.misRayos.length; i++) {
+
+					var rayo = camera.misRayos[i];
+
+					rayCaster.set(camera.position, rayo);
+
+					var colisiones = rayCaster.intersectObjects(
+						objectosConColision,
+						true
 					);
 
-				if(colisiones.length > 0){
+					if (colisiones.length > 0) {
 
-					if(colisiones[0].distance < 1){
+						if (colisiones[0].distance < 1) {
 
-						//scene.remove(colisiones[0].object.parent);
-						camera.translateX(-(forward * deltaTime));
-						console.log("Estamos colisionando con algo");
+							//scene.remove(colisiones[0].object.parent);
+							camera.translateX(-(forward * deltaTime));
+							console.log("Estamos colisionando con algo");
+						}
 					}
+
 				}
-
 			}
+
+
+			renderer.render(scene, camera);
 		}
-		
-	
-		renderer.render(scene, camera);
-	}
 
-	function setupScene() {		
-		var visibleSize = { width: window.innerWidth, height: window.innerHeight};
-		clock = new THREE.Clock();		
-		scene = new THREE.Scene();
-		camera = new THREE.PerspectiveCamera(75, visibleSize.width / visibleSize.height, 0.1, 100);
-		camera.rotation.x = THREE.Math.degToRad(-11);;
-		camera.position.z = 3;
-		camera.position.y = 6;
-		camera.position.x = 5;
+		function setupScene() {
+			var visibleSize = { width: window.innerWidth, height: window.innerHeight };
+			clock = new THREE.Clock();
+			scene = new THREE.Scene();
+			camera = new THREE.PerspectiveCamera(75, visibleSize.width / visibleSize.height, 0.1, 100);
+			camera.rotation.x = THREE.Math.degToRad(-11);;
+			camera.position.z = 3;
+			camera.position.y = 6;
+			camera.position.x = 5;
 
-		renderer = new THREE.WebGLRenderer( {precision: "mediump" } );
-		renderer.setClearColor(new THREE.Color(0, 0, 0));
-		renderer.setPixelRatio(visibleSize.width / visibleSize.height);
-		renderer.setSize(visibleSize.width, visibleSize.height);
+			renderer = new THREE.WebGLRenderer({ precision: "mediump" });
+			renderer.setClearColor(new THREE.Color(0, 0, 0));
+			renderer.setPixelRatio(visibleSize.width / visibleSize.height);
+			renderer.setSize(visibleSize.width, visibleSize.height);
 
-		var ambientLight = new THREE.AmbientLight(new THREE.Color(1, 1, 1), 1.0);
-		scene.add(ambientLight);
+			var ambientLight = new THREE.AmbientLight(new THREE.Color(1, 1, 1), 1.0);
+			scene.add(ambientLight);
 
-		var directionalLight = new THREE.DirectionalLight(new THREE.Color(1, 1, 0), 0.4);
-		directionalLight.position.set(0, 0, 1);
-		scene.add(directionalLight);
+			var directionalLight = new THREE.DirectionalLight(new THREE.Color(1, 1, 0), 0.4);
+			directionalLight.position.set(0, 0, 1);
+			scene.add(directionalLight);
 
-		var grid = new THREE.GridHelper(50, 10, 0xffffff, 0xffffff);
-		grid.position.y = -1;
-		scene.add(grid);
+			var grid = new THREE.GridHelper(50, 10, 0xffffff, 0xffffff);
+			grid.position.y = -1;
+			scene.add(grid);
 
-		$("#scene-section").append(renderer.domElement);
-	}
+			$("#scene-section").append(renderer.domElement);
+		}
 
 
 	</script>
@@ -175,7 +270,8 @@
 
 <body>
 
-	<div id="scene-section"/>
+	<div id="scene-section" />
 
 </body>
+
 </html>
