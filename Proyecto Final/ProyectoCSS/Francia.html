@@ -21,9 +21,18 @@
 		var keys = {};
 		var jugadores = [];
 		var movements = [];
+		var action1;
+		var action2;
+		var action3;
+		var action4;
+
+		var action_1;
+		var action_2;
+		var action_3;
+		var action_4;
 		// TODO: Modelo con animacion.var
 		mixers = [];
-		varmixers_2 = [];
+		var mixers_2 = [];
 		// TODO: End Modelo Animacion.
 
 		var isWorldReady = [false, false];
@@ -79,15 +88,26 @@
 
 
 			var loader = new THREE.FBXLoader();
-			loader.load('assets/ChaosHeadButt1headbutt.fbx', function (personaje) {
+			loader.load('assets/Chaos_Animations.fbx', function (personaje) {
 
 				personaje.mixer = new THREE.AnimationMixer(personaje);
 
 				mixers.push(personaje.mixer);
 
-				var action = personaje.mixer.clipAction(personaje.animations[0]);
+				action_1 = personaje.mixer.clipAction(personaje.animations[0]);
+				action_2 = personaje.mixer.clipAction(personaje.animations[1]);
+				action_3 = personaje.mixer.clipAction(personaje.animations[2]);
+				action_4 = personaje.mixer.clipAction(personaje.animations[3]);
 
-				action.play();
+				action_1.play();
+				action_2.play();
+				action_3.play();
+				action_4.play();
+
+				action_1.weight = 1;
+				action_2.weight = 0;
+				action_3.weight = 0;
+				action_4.weight = 0;
 
 
 
@@ -112,15 +132,33 @@
 			});
 
 			var loader2 = new THREE.FBXLoader();
-			loader2.load('assets/ChaosHeadButt1headbutt.fbx', function (personaje2) {
+			loader2.load('assets/Gohan_Animations.fbx', function (personaje2) {
 
 				personaje2.mixer = new THREE.AnimationMixer(personaje2);
 
 				mixers.push(personaje2.mixer);
 
-				var action = personaje2.mixer.clipAction(personaje2.animations[0]);
+				action1 = personaje2.mixer.clipAction(personaje2.animations[0]);
+				action2 = personaje2.mixer.clipAction(personaje2.animations[1]);
+				action3 = personaje2.mixer.clipAction(personaje2.animations[2]);
+				action4 = personaje2.mixer.clipAction(personaje2.animations[3]);
 
-				action.play();
+				action1.play();
+				action2.play();
+				action3.play();
+				action4.play();
+
+				//Action.setLoop( THREE.LoopOnce);
+
+				action1.play = 1;
+				action2.play = 0;
+				action3.play = 0;
+				action4.play = 0;
+
+				action1.weight = 1;
+				action2.weight = 0;
+				action3.weight = 0;
+				action4.weight = 0;
 
 
 				personaje2.position.z = -4;
@@ -164,10 +202,46 @@
 
 		function onKeyDown(event) {
 			keys[String.fromCharCode(event.keyCode)] = true;
-			console.log(String.fromCharCode(event.keyCode));
+			if (String.fromCharCode(event.keyCode) == "A") {
+				action_1.weight = 0;
+				action_2.weight = 0;
+				action_3.weight = 1;
+				action_4.weight = 0;
+			}
+			if (String.fromCharCode(event.keyCode) == "D") {
+				action_1.weight = 0;
+				action_2.weight = 1;
+				action_3.weight = 0;
+				action_4.weight = 0;
+			}
+			if (String.fromCharCode(event.keyCode) == "d") {
+				action1.weight = 0;
+				action2.weight = 1;
+				action3.weight = 0;
+				action4.weight = 0;
+			}
+			if (String.fromCharCode(event.keyCode) == "f") {
+				action1.weight = 0;
+				action2.weight = 0;
+				action3.weight = 1;
+				action4.weight = 0;
+			}
+
 		}
 		function onKeyUp(event) {
 			keys[String.fromCharCode(event.keyCode)] = false;
+			if (String.fromCharCode(event.keyCode) == "d" || String.fromCharCode(event.keyCode) == "f") {
+				action1.weight = 1;
+				action2.weight = 0;
+				action3.weight = 0;
+				action4.weight = 0;
+			}
+			if (String.fromCharCode(event.keyCode) == "A" || String.fromCharCode(event.keyCode) == "D") {
+				action_1.weight = 1;
+				action_2.weight = 0;
+				action_3.weight = 0;
+				action_4.weight = 0;
+			}
 		}
 
 
@@ -182,22 +256,28 @@
 				}
 			}
 
+			//ANIMACION PERSONAJE 2
+			/*if(mixers_2.length> 0) {
+				for(vari= 0; i< mixers_2.length; i++) {
+					mixers_2[i].update(deltaTime);
+				}
+			}*/
+
 			var forward = 0;
 			var forward2 = 0;
 			var forward3 = 0;
 
 			if (keys["A"]) {
-				forward = -20;
-
+				forward = -5;
 			} else if (keys["D"]) {
-				forward = 20;
+				forward = 5;
 			}
 
 			if (keys["d"]) {
-				forward2 = 20;
+				forward2 = 5;
 
 			} else if (keys["f"]) {
-				forward2 = -20;
+				forward2 = -5;
 			}
 
 			if (keys["'"]) {
@@ -207,8 +287,8 @@
 				forward3 = -20;
 			}
 
-			movements[0] = forward;
-			movements[1] = forward2;
+			movements[1] = forward;
+			movements[0] = forward2;
 
 			if (isWorldReady[0] && isWorldReady[1]) {
 
@@ -302,7 +382,7 @@
 
 <body>
 
-	<div id="scene-section" />
+	<div id="scene-section"></div>
 
 </body>
 
