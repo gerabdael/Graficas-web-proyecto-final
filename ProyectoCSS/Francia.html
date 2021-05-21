@@ -95,20 +95,12 @@
 
 				mixers.push(personaje.mixer);
 
-				action_1 = personaje.mixer.clipAction(personaje.animations[0]);
-				action_2 = personaje.mixer.clipAction(personaje.animations[1]);
-				action_3 = personaje.mixer.clipAction(personaje.animations[2]);
-				action_4 = personaje.mixer.clipAction(personaje.animations[3]);
+				const clips = personaje.animations;
 
-				action_1.play();
-				action_2.play();
-				action_3.play();
-				action_4.play();
-
-				//action_1.setLoop(THREE.LoopRepeat);
-
-
-
+				const clip= THREE.AnimationClip.findByName(clips,'Forward');
+				const action = personaje.mixer.clipAction(clip);
+				action.play();
+				
 
 				personaje.position.z = -4;
 				personaje.position.x = 5;
@@ -130,35 +122,51 @@
 			});
 
 			var loader2 = new THREE.FBXLoader();
-			loader2.load('assets/GohanAnimations.fbx', function (personaje2) {
+			loader2.load('assets/GohanAnimations1.fbx', function (personaje2) {
 
 				personaje2.mixer = new THREE.AnimationMixer(personaje2);
 
 				mixers_2.push(personaje2.mixer);
 
-				action1 = personaje2.mixer.clipAction(personaje2.animations[0]);
-				action2 = personaje2.mixer.clipAction(personaje2.animations[1]);
-				action3 = personaje2.mixer.clipAction(personaje2.animations[2]);
-				action4 = personaje2.mixer.clipAction(personaje2.animations[3]);
-
-				action1.play();
-				action2.play();
-				action3.play();
-				action4.play();
-
-				//Action.setLoop( THREE.LoopOnce);
-
-				// action1.play = 0;
-				// action2.play = 1;
-				// action3.play = 0;
-				// action4.play = 0;
-
-				 action1.weight = 0;
-				 action2.weight = 1;
-				 action3.weight = 0;
-				 action4.weight = 0;
-
-
+				const clips = personaje2.animations;
+				
+				const forward= THREE.AnimationClip.findByName(clips,'Forward');
+				//const forward1 = THREE.AnimationUtils.subclip(forward,'Forward',136,160,24);
+				const idle= THREE.AnimationClip.findByName(clips,'Idle');
+				const backward= THREE.AnimationClip.findByName(clips,'Backward');
+				const headbutt= THREE.AnimationClip.findByName(clips,'HeadButt');
+				const Punch1= THREE.AnimationClip.findByName(clips,'Punch1');
+				const Punch2= THREE.AnimationClip.findByName(clips,'Punch2');
+				const Kick1= THREE.AnimationClip.findByName(clips,'Kick1');
+				const Kick2= THREE.AnimationClip.findByName(clips,'Kick2');
+				const Taunt= THREE.AnimationClip.findByName(clips,'Taunt');
+				const Victory= THREE.AnimationClip.findByName(clips,'Victory');
+				const Defeat= THREE.AnimationClip.findByName(clips,'Defeat');
+				
+				const actionforward = personaje2.mixer.clipAction(forward);
+				const actionIdle = personaje2.mixer.clipAction(idle);
+				const antionbackward=personaje2.mixer.clipAction(backward);
+				const actionHeadbutt = personaje2.mixer.clipAction(headbutt);
+				const actionPunch1= personaje2.mixer.clipAction(Punch1);
+				const actionPunch2= personaje2.mixer.clipAction(Punch2);
+				const actionKick1= personaje2.mixer.clipAction(Kick1);
+				const actionKick2= personaje2.mixer.clipAction(Kick2);
+				const actionTaunt= personaje2.mixer.clipAction(Taunt);
+				const actionVictory=personaje2.mixer.clipAction(Victory);
+				const actionDefeat= personaje2.mixer.clipAction(Defeat);
+				
+				antionbackward.enabled =false;
+				actionHeadbutt.play();
+				actionPunch1.enabled =false;
+				actionPunch2.enabled =false;
+				actionKick1.enabled =false;
+				actionKick2.enabled =false;
+				actionTaunt.enabled =false;
+				actionVictory.enabled =false;
+				actionDefeat.enabled =false;
+				actionIdle.enabled =false;
+				actionforward.play();
+				
 				personaje2.position.z = -4;
 				personaje2.position.x = 10;
 				personaje2.position.y = 1;
@@ -182,7 +190,7 @@
 			document.addEventListener('keydown', onKeyDown);
 			document.addEventListener('keyup', onKeyUp);
 		});
-
+		
 		function loadOBJWithMTL(path, objFile, mtlFile, onLoadCallback) {
 			var mtlLoader = new THREE.MTLLoader();
 			mtlLoader.setPath(path);
@@ -201,13 +209,14 @@
 		function onKeyDown(event) {
 			keys[String.fromCharCode(event.keyCode)] = true;
 			if (String.fromCharCode(event.keyCode) == "A") {
-
+				
 			}
 			if (String.fromCharCode(event.keyCode) == "D") {
-				flag= true;
+				
 			}
 			if (String.fromCharCode(event.keyCode) == "d") {
-
+				playaction('Taunt');
+				flag= true;
 			}
 			if (String.fromCharCode(event.keyCode) == "f") {
 				
@@ -223,24 +232,18 @@
 
 			}
 		}
+	
 
 
 		function render() {
 			requestAnimationFrame(render);
 			deltaTime = clock.getDelta();
-
+			          
 			//ANIMACION PERSONAJE 1
 			if (mixers.length > 0) {
 				for (var i = 0; i < mixers.length; i++) {
 					mixers[i].update(deltaTime);
-				}	if(flag){
-					action_1.weight=0;
-					action_2.weight=1;
-					flag= false;
-				}else{
-					action_1.weight=1;
-					action_2.weight=0;
-				}
+				}	
 
 			}
 
@@ -248,7 +251,15 @@
 			if(mixers_2.length> 0) {
 				for(var i= 0; i< mixers_2.length; i++) {
 					mixers_2[i].update(deltaTime);
-				}
+				}/*if(flag){
+					action1.weight=0;
+					action2.weight=1;
+					flag= false;
+				}else{
+					action1.weight=0;
+					action2.weight=0;
+					action3.weight=1;
+				}*/
 			
 			}
 
