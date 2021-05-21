@@ -1,0 +1,437 @@
+<html>
+<head>
+	
+	<title>Francia</title>
+	<script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="js/libs/three/three2.js"></script>
+	<script type="text/javascript" src="js/libs/three/MTLLoader.js"></script>
+	<script type="text/javascript" src="js/libs/three/FBXLoader.js"></script>
+	<script type="text/javascript" src="js/libs/three/OBJLoader.js"></script>
+	<script type="text/javascript" src="js/libs/three/inflate.min.js"></script>
+	<script type="text/javascript">
+
+<<<<<<< HEAD:Proyecto Final/ProyectoCSS/Francia.html
+	var scene;
+	var camera;
+	var renderer;
+	var controls;
+	var objectosConColision = [];
+	var clock;
+	var deltaTime;	
+	var keys = {};
+	// TODO: Modelo con animacion.var
+	mixers= [];
+	varmixers_2= [];
+	// TODO: End Modelo Animacion.
+=======
+		var scene;
+		var camera;
+		var renderer;
+		var controls;
+		var objectosConColision = [];
+		var clock;
+		var deltaTime;
+		var keys = {};
+		var flag= false;
+		var jugadores = [];
+		var movements = [];
+		var action1;
+		var action2;
+		var action3;
+		var action4;
+
+		var action_1;
+		var action_2;
+		var action_3;
+		var action_4;
+		// TODO: Modelo con animacion.var
+		var mixers = [];
+		var mixers_2 = [];
+		// TODO: End Modelo Animacion.
+
+		var isWorldReady = [false, false];
+
+		var rayCaster;
+
+		$(document).ready(function () {
+
+			rayCaster = new THREE.Raycaster();
+
+			setupScene();
+
+			camera.misRayos = [
+				new THREE.Vector3(0, 0, 1),
+				new THREE.Vector3(0, 0, -1),
+				new THREE.Vector3(1, 0, 0),
+				new THREE.Vector3(-1, 0, 0)
+			];
+
+
+			loadOBJWithMTL("assets/", "colision.obj", "colision.mtl", (object) => {
+				object.position.z = -30;
+
+				var box7 = object.clone();
+				box7.position.x = -6;
+				box7.position.z = 0;
+				box7.rotation.y = THREE.Math.degToRad(-90);
+
+				var box8 = object.clone();
+				box8.position.x = 8;
+				box8.position.z = 0;
+				box8.rotation.y = THREE.Math.degToRad(90);
+
+
+				scene.add(box7);
+				scene.add(box8);
+
+
+				objectosConColision.push(box7);
+				objectosConColision.push(box8);
+
+				isWorldReady[0] = true;
+			});
+
+			loadOBJWithMTL("assets/", "escenario2.obj", "escenario2.mtl", (object) => {
+				object.position.z = -10;
+				object.position.x = 3;
+
+
+				scene.add(object);
+				isWorldReady[1] = true;
+			});
+>>>>>>> ec2027a97b5ee77ce319040ee1014418439ff070:ProyectoCSS/Francia.html
+
+	var isWorldReady = [ false, false ];
+
+<<<<<<< HEAD:Proyecto Final/ProyectoCSS/Francia.html
+	var rayCaster;
+=======
+			var loader = new THREE.FBXLoader();
+			loader.load('assets/ChaosAnimations.fbx', function (personaje) {
+>>>>>>> ec2027a97b5ee77ce319040ee1014418439ff070:ProyectoCSS/Francia.html
+
+	$(document).ready(function() {
+
+		rayCaster = new THREE.Raycaster();
+
+		setupScene();
+
+		camera.misRayos = [
+			new THREE.Vector3(0, 0, 1),
+			new THREE.Vector3(0, 0, -1),
+			new THREE.Vector3(1, 0, 0),
+			new THREE.Vector3(-1, 0, 0)
+		];
+
+<<<<<<< HEAD:Proyecto Final/ProyectoCSS/Francia.html
+=======
+				//action_1.setLoop(THREE.LoopRepeat);
+>>>>>>> ec2027a97b5ee77ce319040ee1014418439ff070:ProyectoCSS/Francia.html
+
+		loadOBJWithMTL("assets/", "colision.obj", "colision.mtl", (object) => {
+			object.position.z = -30;			
+
+			var box7 = object.clone();
+			box7.position.x = -6;
+			box7.position.z = 0;
+			box7.rotation.y = THREE.Math.degToRad(-90);
+
+			var box8 = object.clone();
+			box8.position.x = 8;
+			box8.position.z = 0;
+			box8.rotation.y = THREE.Math.degToRad(90);
+
+
+			scene.add(box7);
+			scene.add(box8);
+
+
+			objectosConColision.push(box7);
+			objectosConColision.push(box8);
+
+			isWorldReady[0] = true;
+		});
+
+<<<<<<< HEAD:Proyecto Final/ProyectoCSS/Francia.html
+		loadOBJWithMTL("assets/", "escenario2.obj", "escenario2.mtl", (object) => {
+			object.position.z = -10;
+			object.position.x = 3;
+			
+=======
+			var loader2 = new THREE.FBXLoader();
+			loader2.load('assets/GohanAnimations.fbx', function (personaje2) {
+>>>>>>> ec2027a97b5ee77ce319040ee1014418439ff070:ProyectoCSS/Francia.html
+
+			scene.add(object);
+			isWorldReady[1] = true;
+		});
+
+<<<<<<< HEAD:Proyecto Final/ProyectoCSS/Francia.html
+=======
+				mixers_2.push(personaje2.mixer);
+>>>>>>> ec2027a97b5ee77ce319040ee1014418439ff070:ProyectoCSS/Francia.html
+
+		var loader= new THREE.FBXLoader();
+		loader.load('assets/GohanAnimations1.fbx', function(personaje){
+
+			personaje.mixer= new THREE.AnimationMixer(personaje);
+			
+			mixers.push(personaje.mixer);
+			
+			var action = personaje.mixer.clipAction(personaje.animations[0]);
+			
+			action.play();
+			
+
+
+<<<<<<< HEAD:Proyecto Final/ProyectoCSS/Francia.html
+
+			personaje.position.z= -6;
+			personaje.position.x= 0;
+			personaje.position.y= .5;
+			personaje.scale.set(0.03,0.03,0.03);
+			personaje.rotation.y= THREE.Math.degToRad(90);
+=======
+				// action1.play = 0;
+				// action2.play = 1;
+				// action3.play = 0;
+				// action4.play = 0;
+
+				 action1.weight = 0;
+				 action2.weight = 1;
+				 action3.weight = 0;
+				 action4.weight = 0;
+>>>>>>> ec2027a97b5ee77ce319040ee1014418439ff070:ProyectoCSS/Francia.html
+
+			scene.add(personaje);
+
+		});
+
+		var loader2= new THREE.FBXLoader();
+		loader2.load('assets/GohanAnimations1.fbx', function(personaje2){
+
+			personaje2.mixer= new THREE.AnimationMixer(personaje2);
+			
+			mixers.push(personaje2.mixer);
+			
+			var action = personaje2.mixer.clipAction(personaje2.animations[0]);
+			
+			action.play();
+
+
+			personaje2.position.z= -6;
+			personaje2.position.x= 10;
+			personaje2.position.y= .5;
+			personaje2.scale.set(0.03,0.03,0.03);
+			personaje2.rotation.y= THREE.Math.degToRad(-90);
+
+			scene.add(personaje2);
+		});
+
+		render();
+
+		document.addEventListener('keydown', onKeyDown);
+		document.addEventListener('keyup', onKeyUp);		
+	});
+
+	function loadOBJWithMTL(path, objFile, mtlFile, onLoadCallback) {
+		var mtlLoader = new THREE.MTLLoader();
+		mtlLoader.setPath(path);
+		mtlLoader.load(mtlFile, (materials) => {
+			
+			var objLoader = new THREE.OBJLoader();
+			objLoader.setMaterials(materials);
+			objLoader.setPath(path);
+			objLoader.load(objFile, (object) => {
+				onLoadCallback(object);
+			});
+<<<<<<< HEAD:Proyecto Final/ProyectoCSS/Francia.html
+=======
+		}
+
+		function onKeyDown(event) {
+			keys[String.fromCharCode(event.keyCode)] = true;
+			if (String.fromCharCode(event.keyCode) == "A") {
+
+			}
+			if (String.fromCharCode(event.keyCode) == "D") {
+				flag= true;
+			}
+			if (String.fromCharCode(event.keyCode) == "d") {
+
+			}
+			if (String.fromCharCode(event.keyCode) == "f") {
+				
+			}
+>>>>>>> ec2027a97b5ee77ce319040ee1014418439ff070:ProyectoCSS/Francia.html
+
+		});
+	}
+
+	function onKeyDown(event) {
+		keys[String.fromCharCode(event.keyCode)] = true;
+	}
+	function onKeyUp(event) {
+		keys[String.fromCharCode(event.keyCode)] = false;
+	}
+
+	
+	function render() {
+		requestAnimationFrame(render);
+		deltaTime = clock.getDelta();	
+
+//ANIMACION PERSONAJE 1
+if(mixers.length > 0) {
+	for(var i= 0; i < mixers.length; i++) {
+		mixers[i].update(deltaTime);
+	}
+}
+		var forward = 0;
+
+		if (keys["A"]) {
+			forward = -20;
+		} else if (keys["D"]) {
+			forward = 20;
+		}
+<<<<<<< HEAD:Proyecto Final/ProyectoCSS/Francia.html
+
+
+		if (isWorldReady[0] && isWorldReady[1]) {
+			
+			//camera.rotation.y += yaw * deltaTime;
+			camera.translateX(forward * deltaTime);
+=======
+		function onKeyUp(event) {
+			keys[String.fromCharCode(event.keyCode)] = false;
+			if (String.fromCharCode(event.keyCode) == "d" || String.fromCharCode(event.keyCode) == "f") {
+			
+			}
+			if (String.fromCharCode(event.keyCode) == "A" || String.fromCharCode(event.keyCode) == "D") {
+
+			}
+		}
+
+
+		function render() {
+			requestAnimationFrame(render);
+			deltaTime = clock.getDelta();
+
+			//ANIMACION PERSONAJE 1
+			if (mixers.length > 0) {
+				for (var i = 0; i < mixers.length; i++) {
+					mixers[i].update(deltaTime);
+				}	if(flag){
+					action_1.weight=0;
+					action_2.weight=1;
+					flag= false;
+				}else{
+					action_1.weight=1;
+					action_2.weight=0;
+				}
+
+			}
+
+			//ANIMACION PERSONAJE 2
+			if(mixers_2.length> 0) {
+				for(var i= 0; i< mixers_2.length; i++) {
+					mixers_2[i].update(deltaTime);
+				}
+			
+			}
+
+			var forward = 0;
+			var forward2 = 0;
+			var forward3 = 0;
+
+			if (keys["A"]) {
+				forward = -5;
+			} else if (keys["D"]) {
+				forward = 5;
+				flag= true;
+			
+			}
+
+			if (keys["d"]) {
+				forward2 = 5;
+				flag= true;
+			} else if (keys["f"]) {
+				forward2 = -5;
+			}
+
+			if (keys["'"]) {
+				forward3 = 20;
+
+			} else if (keys["%"]) {
+				forward3 = -20;
+			}
+>>>>>>> ec2027a97b5ee77ce319040ee1014418439ff070:ProyectoCSS/Francia.html
+
+			for(var i = 0; i < camera.misRayos.length; i++){
+
+				var rayo = camera.misRayos[i];
+
+				rayCaster.set(camera.position, rayo);
+
+				var colisiones = rayCaster.intersectObjects(
+					objectosConColision, 
+					true
+					);
+
+				if(colisiones.length > 0){
+
+					if(colisiones[0].distance < 1){
+
+						//scene.remove(colisiones[0].object.parent);
+						camera.translateX(-(forward * deltaTime));
+						console.log("Estamos colisionando con algo");
+					}
+				}
+
+			}
+		}
+		
+	
+		renderer.render(scene, camera);
+	}
+
+	function setupScene() {		
+		var visibleSize = { width: window.innerWidth, height: window.innerHeight};
+		clock = new THREE.Clock();		
+		scene = new THREE.Scene();
+		camera = new THREE.PerspectiveCamera(75, visibleSize.width / visibleSize.height, 0.1, 100);
+		camera.rotation.x = THREE.Math.degToRad(-11);;
+		camera.position.z = 3;
+		camera.position.y = 6;
+		camera.position.x = 5;
+
+		renderer = new THREE.WebGLRenderer( {precision: "mediump" } );
+		renderer.setClearColor(new THREE.Color(0, 0, 0));
+		renderer.setPixelRatio(visibleSize.width / visibleSize.height);
+		renderer.setSize(visibleSize.width, visibleSize.height);
+
+		var ambientLight = new THREE.AmbientLight(new THREE.Color(1, 1, 1), 1.0);
+		scene.add(ambientLight);
+
+		var directionalLight = new THREE.DirectionalLight(new THREE.Color(1, 1, 0), 0.4);
+		directionalLight.position.set(0, 0, 1);
+		scene.add(directionalLight);
+
+		var grid = new THREE.GridHelper(50, 10, 0xffffff, 0xffffff);
+		grid.position.y = -1;
+		scene.add(grid);
+
+
+
+		$("#scene-section").append(renderer.domElement);
+	}
+
+
+	</script>
+</head>
+
+<body>
+
+	<div id="scene-section"/>
+
+</body>
+</html>
