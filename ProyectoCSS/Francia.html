@@ -11,6 +11,20 @@
 	<script type="text/javascript" src="js/libs/three/inflate.min.js"></script>
 	<script type="text/javascript">
 
+		//Animaciones
+		var actionforward;
+		var actionIdle;
+		var actionbackward;
+		var actionHeadbutt;
+		var actionPunch1;
+		var actionPunch2;
+		var actionKick1;
+		var actionKick2;
+		var actionTaunt;
+		var actionVictory;
+		var actionDefeat;
+		//
+
 		var scene;
 		var camera;
 		var renderer;
@@ -19,7 +33,7 @@
 		var clock;
 		var deltaTime;
 		var keys = {};
-		var flag= false;
+		var flag = false;
 		var jugadores = [];
 		var movements = [];
 		var action1;
@@ -96,8 +110,8 @@
 				bar1.position.z = -10;
 				bar1.position.x = -5;
 				bar1.position.y = -5;
-				
-				bar1.name="bar1";
+
+				bar1.name = "bar1";
 
 				scene.add(bar1);
 				isWorldReady[2] = true;
@@ -107,8 +121,8 @@
 				bar1.position.z = -10;
 				bar1.position.x = -5;
 				bar1.position.y = -5;
-				
-				bar1.name="hp1";
+
+				bar1.name = "hp1";
 
 				scene.add(bar1);
 				isWorldReady[2] = true;
@@ -118,8 +132,8 @@
 				bar2.position.z = -10;
 				bar2.position.x = -1;
 				bar2.position.y = -5;
-				
-				bar2.name="bar2";
+
+				bar2.name = "bar2";
 
 				scene.add(bar2);
 				isWorldReady[3] = true;
@@ -129,8 +143,8 @@
 				bar2.position.z = -10;
 				bar2.position.x = -1;
 				bar2.position.y = -5;
-				
-				bar2.name="hp2";
+
+				bar2.name = "hp2";
 
 				scene.add(bar2);
 				isWorldReady[3] = true;
@@ -145,14 +159,14 @@
 
 				const clips = personaje.animations;
 
-				const clip= THREE.AnimationClip.findByName(clips,'Forward');
+				const clip = THREE.AnimationClip.findByName(clips, 'Forward');
 				const action = personaje.mixer.clipAction(clip);
 				action.play();
-				
 
-				personaje.position.z= -6;
-				personaje.position.x= 0;
-				personaje.position.y= .5;
+
+				personaje.position.z = -6;
+				personaje.position.x = 0;
+				personaje.position.y = .5;
 				personaje.scale.set(0.03, 0.03, 0.03);
 				personaje.rotation.y = THREE.Math.degToRad(90);
 				personaje.misRayos = [
@@ -177,47 +191,43 @@
 				mixers_2.push(personaje2.mixer);
 
 				const clips = personaje2.animations;
-				
-				const forward= THREE.AnimationClip.findByName(clips,'Forward');
+
+				const forward = THREE.AnimationClip.findByName(clips, 'Forward');
 				//const forward1 = THREE.AnimationUtils.subclip(forward,'Forward',136,160,24);
-				const idle= THREE.AnimationClip.findByName(clips,'Idle');
-				const backward= THREE.AnimationClip.findByName(clips,'Backward');
-				const headbutt= THREE.AnimationClip.findByName(clips,'HeadButt');
-				const Punch1= THREE.AnimationClip.findByName(clips,'Punch1');
-				const Punch2= THREE.AnimationClip.findByName(clips,'Punch2');
-				const Kick1= THREE.AnimationClip.findByName(clips,'Kick1');
-				const Kick2= THREE.AnimationClip.findByName(clips,'Kick2');
-				const Taunt= THREE.AnimationClip.findByName(clips,'Taunt');
-				const Victory= THREE.AnimationClip.findByName(clips,'Victory');
-				const Defeat= THREE.AnimationClip.findByName(clips,'Defeat');
+				const idle = THREE.AnimationClip.findByName(clips, 'Idle');
+				const backward = THREE.AnimationClip.findByName(clips, 'Backward');
+				const headbutt = THREE.AnimationClip.findByName(clips, 'HeadButt');
+				const Punch1 = THREE.AnimationClip.findByName(clips, 'Punch1');
+				const Punch2 = THREE.AnimationClip.findByName(clips, 'Punch2');
+				const Kick1 = THREE.AnimationClip.findByName(clips, 'Kick1');
+				const Kick2 = THREE.AnimationClip.findByName(clips, 'Kick2');
+				const Taunt = THREE.AnimationClip.findByName(clips, 'Taunt');
+				const Victory = THREE.AnimationClip.findByName(clips, 'Victory');
+				const Defeat = THREE.AnimationClip.findByName(clips, 'Defeat');
+
+				actionforward = personaje2.mixer.clipAction(forward);
+				actionIdle = personaje2.mixer.clipAction(idle);
+				actionbackward = personaje2.mixer.clipAction(backward);
+				actionHeadbutt = personaje2.mixer.clipAction(headbutt);
+				actionPunch1 = personaje2.mixer.clipAction(Punch1);
+				actionPunch1.setLoop(THREE.LoopOnce);
+				actionPunch2 = personaje2.mixer.clipAction(Punch2);
+				actionPunch2.setLoop(THREE.LoopOnce);
+				actionKick1 = personaje2.mixer.clipAction(Kick1);
+				actionKick1.setLoop(THREE.LoopOnce);
+				actionKick2 = personaje2.mixer.clipAction(Kick2);
+				actionKick2.setLoop(THREE.LoopOnce);
+				actionTaunt = personaje2.mixer.clipAction(Taunt);
+				actionVictory = personaje2.mixer.clipAction(Victory);
+				actionDefeat = personaje2.mixer.clipAction(Defeat);
+
+				actionIdle.play();
+
 				
-				const actionforward = personaje2.mixer.clipAction(forward);
-				const actionIdle = personaje2.mixer.clipAction(idle);
-				const antionbackward=personaje2.mixer.clipAction(backward);
-				const actionHeadbutt = personaje2.mixer.clipAction(headbutt);
-				const actionPunch1= personaje2.mixer.clipAction(Punch1);
-				const actionPunch2= personaje2.mixer.clipAction(Punch2);
-				const actionKick1= personaje2.mixer.clipAction(Kick1);
-				const actionKick2= personaje2.mixer.clipAction(Kick2);
-				const actionTaunt= personaje2.mixer.clipAction(Taunt);
-				const actionVictory=personaje2.mixer.clipAction(Victory);
-				const actionDefeat= personaje2.mixer.clipAction(Defeat);
-				
-				antionbackward.enabled =false;
-				actionHeadbutt.play();
-				actionPunch1.enabled =false;
-				actionPunch2.enabled =false;
-				actionKick1.enabled =false;
-				actionKick2.enabled =false;
-				actionTaunt.enabled =false;
-				actionVictory.enabled =false;
-				actionDefeat.enabled =false;
-				actionIdle.enabled =false;
-				actionforward.play();
-				
-				personaje2.position.z= -6;
-				personaje2.position.x= 10;
-				personaje2.position.y= .5;
+
+				personaje2.position.z = -6;
+				personaje2.position.x = 10;
+				personaje2.position.y = .5;
 				personaje2.scale.set(0.03, 0.03, 0.03);
 				personaje2.rotation.y = THREE.Math.degToRad(-90);
 				personaje2.misRayos = [
@@ -231,14 +241,23 @@
 				scene.add(personaje2);
 
 				jugadores.push(personaje2);
-			});
 
+				mixers_2[0].addEventListener('finished', aber);
+			});
+			
 			render();
 
 			document.addEventListener('keydown', onKeyDown);
 			document.addEventListener('keyup', onKeyUp);
+			
 		});
-		
+
+		function aber(){
+			flag = false;
+			actionIdle.play();
+			console.log("a");
+		}
+
 		function loadOBJWithMTL(path, objFile, mtlFile, onLoadCallback) {
 			var mtlLoader = new THREE.MTLLoader();
 			mtlLoader.setPath(path);
@@ -255,49 +274,99 @@
 		}
 
 		function onKeyDown(event) {
+			console.log("key: " + String.fromCharCode(event.keyCode));
 			keys[String.fromCharCode(event.keyCode)] = true;
 			if (String.fromCharCode(event.keyCode) == "A") {
-				
+
 			}
 			if (String.fromCharCode(event.keyCode) == "D") {
-				
+
 			}
 			if (String.fromCharCode(event.keyCode) == "d") {
-				playaction('Taunt');
-				flag= true;
+				//playaction('Taunt');
+				if (!flag) {
+					mixers_2[0].stopAllAction();
+					actionforward.time = 5;
+					actionforward.play();
+					flag = true;
+				}
+				if (actionforward.time >= 0 && actionforward.time <= 0.15) {
+					actionforward.time = 5;
+				}
 			}
 			if (String.fromCharCode(event.keyCode) == "f") {
-				
+				if (!flag) {
+					mixers_2[0].stopAllAction();
+					actionbackward.time = 6;
+					actionbackward.play();
+					flag = true;
+				}
+				if (actionbackward.time >= 0 && actionbackward.time <= 0.10) {
+					actionbackward.time = 6;
+				}
 			}
-
+			if (String.fromCharCode(event.keyCode) == "g") {
+				if (!flag) {
+					mixers_2[0].stopAllAction();
+					actionPunch1.time = 7;
+					actionPunch1.play();
+					flag = true;
+				}
+			}
+			if (String.fromCharCode(event.keyCode) == "i") {
+				if (!flag) {
+					mixers_2[0].stopAllAction();
+					actionPunch2.time = 8;
+					actionPunch2.play();
+					flag = true;
+				}
+			}
+			if (String.fromCharCode(event.keyCode) == "a") {
+				if (!flag) {
+					mixers_2[0].stopAllAction();
+					actionKick1.time = 9.5;
+					actionKick1.play();
+					flag = true;
+				}
+			}
+			if (String.fromCharCode(event.keyCode) == "c") {
+				if (!flag) {
+					mixers_2[0].stopAllAction();
+					actionKick2.time = 11.5;
+					actionKick2.play();
+					flag = true;
+				}
+			}
 		}
 		function onKeyUp(event) {
 			keys[String.fromCharCode(event.keyCode)] = false;
 			if (String.fromCharCode(event.keyCode) == "d" || String.fromCharCode(event.keyCode) == "f") {
-			
+				flag = false;
+				mixers_2[0].stopAllAction();
+				actionIdle.play();
 			}
 			if (String.fromCharCode(event.keyCode) == "A" || String.fromCharCode(event.keyCode) == "D") {
 
 			}
 		}
-	
+
 
 
 		function render() {
 			requestAnimationFrame(render);
 			deltaTime = clock.getDelta();
-			          
+
 			//ANIMACION PERSONAJE 1
 			if (mixers.length > 0) {
 				for (var i = 0; i < mixers.length; i++) {
 					mixers[i].update(deltaTime);
-				}	
+				}
 
 			}
 
 			//ANIMACION PERSONAJE 2
-			if(mixers_2.length> 0) {
-				for(var i= 0; i< mixers_2.length; i++) {
+			if (mixers_2.length > 0) {
+				for (var i = 0; i < mixers_2.length; i++) {
 					mixers_2[i].update(deltaTime);
 				}/*if(flag){
 					action1.weight=0;
@@ -308,9 +377,8 @@
 					action2.weight=0;
 					action3.weight=1;
 				}*/
-			
-			}
 
+			}
 			var forward = 0;
 			var forward2 = 0;
 			var forward3 = 0;
@@ -324,22 +392,23 @@
 				forward = -5;
 			} else if (keys["D"]) {
 				forward = 5;
-				flag= true;
-			
+				flag = true;
+
 			}
 
 			if (keys["d"]) {
 				forward2 = 5;
-				flag= true;
+				//flag = true;
 			} else if (keys["f"]) {
 				forward2 = -5;
 			}
 
 			if (keys["'"]) {
-				forward3 = 20;
+				forward3 = 100;
 
 			} else if (keys["%"]) {
-				forward3 = -20;
+
+				forward3 = -100;
 			}
 
 			movements[1] = forward;
