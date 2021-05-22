@@ -24,6 +24,11 @@
 		var action2;
 		var action3;
 
+		var lifebar1;
+		var lifebar2;
+		var greenbar1;
+		var greenbar2;
+
 		mixers = [];
 		var mixers_2 = [];
 
@@ -77,6 +82,50 @@
 				isWorldReady[1] = true;
 			});
 
+			loadOBJWithMTL("assets/", "HPbar1.obj", "HPbar1.mtl", (bar1) => {
+				bar1.position.z = -10;
+				bar1.position.x = -5;
+				bar1.position.y = -4.5;
+				
+				bar1.name="bar1";
+
+				scene.add(bar1);
+				isWorldReady[2] = true;
+			});
+
+			loadOBJWithMTL("assets/", "HP1.obj", "HP1.mtl", (bar1) => {
+				bar1.position.z = -10;
+				bar1.position.x = -5;
+				bar1.position.y = -4.5;
+				
+				bar1.name="hp1";
+
+				scene.add(bar1);
+				isWorldReady[2] = true;
+			});
+
+			loadOBJWithMTL("assets/", "HPbar2.obj", "HPbar2.mtl", (bar2) => {
+				bar2.position.z = -10;
+				bar2.position.x = -1;
+				bar2.position.y = -4.5;
+				
+				bar2.name="bar2";
+
+				scene.add(bar2);
+				isWorldReady[3] = true;
+			});
+
+			loadOBJWithMTL("assets/", "HP2.obj", "HP2.mtl", (bar2) => {
+				bar2.position.z = -10;
+				bar2.position.x = -1;
+				bar2.position.y = -4.5;
+				
+				bar2.name="hp2";
+
+				scene.add(bar2);
+				isWorldReady[3] = true;
+			});
+
 			var loader = new THREE.FBXLoader();
 			loader.load('assets/ChaosAnimations.fbx', function (personaje) {
 
@@ -91,9 +140,9 @@
 
 
 
-				personaje.position.z = -4;
-				personaje.position.x = 5;
-				personaje.position.y = 1;
+				personaje.position.z= -6;
+				personaje.position.x= 0;
+				personaje.position.y= .5;
 				personaje.scale.set(0.03, 0.03, 0.03);
 				personaje.rotation.y = THREE.Math.degToRad(90);
 				personaje.misRayos = [
@@ -140,9 +189,9 @@
 				action4.weight = 0;
 
 
-				personaje2.position.z = -4;
-				personaje2.position.x = 10;
-				personaje2.position.y = 1;
+				personaje2.position.z= -6;
+				personaje2.position.x= 10;
+				personaje2.position.y= .5;
 				personaje2.scale.set(0.03, 0.03, 0.03);
 				personaje2.rotation.y = THREE.Math.degToRad(-90);
 				personaje2.misRayos = [
@@ -194,6 +243,10 @@
 		function render() {
 			requestAnimationFrame(render);
 			deltaTime = clock.getDelta();
+			lifebar1 = scene.getObjectByName("bar1");
+			lifebar2 = scene.getObjectByName("bar2");
+			greenbar1 = scene.getObjectByName("hp1");
+			greenbar2 = scene.getObjectByName("hp2");
 
 			var forward = 0;
 			if (keys["A"]) {
@@ -206,6 +259,10 @@
 
 				//camera.rotation.y += yaw * deltaTime;
 				camera.translateX(forward * deltaTime);
+				lifebar1.translateX(forward * deltaTime);
+				lifebar2.translateX(forward * deltaTime);
+				greenbar1.translateX(forward * deltaTime);
+				greenbar2.translateX(forward * deltaTime);
 
 				for (var i = 0; i < camera.misRayos.length; i++) {
 
@@ -224,6 +281,11 @@
 
 							//scene.remove(colisiones[0].object.parent);
 							camera.translateX(-(forward * deltaTime));
+							lifebar1.translateX(-(forward * deltaTime));
+							lifebar2.translateX(-(forward * deltaTime));
+							greenbar1.translateX(-(forward * deltaTime));
+							greenbar2.translateX(-(forward * deltaTime));
+
 							console.log("Estamos colisionando con algo");
 						}
 					}
