@@ -369,7 +369,7 @@
 			} else {
 				cancelAnimationFrame(req);
 				req = undefined;
-				$(".gameover").css("visibility", "visible");
+				$(".gameoverC").css("visibility", "visible");
 				volume = 0.2;
 				console.log(volume);
 			}
@@ -386,7 +386,7 @@
 			} else {
 				cancelAnimationFrame(req);
 				req = undefined;
-				$(".gameover").css("visibility", "visible");
+				$(".gameoverg").css("visibility", "visible");
 				volume = 0.2;
 				console.log(volume);
 			}
@@ -840,23 +840,23 @@
 
 <body>
 	<div class="pausa1">
-		<br>
-		<br>
-		<br>
-		<button onclick="VolverMenu()" class="btn btn-VolverMenu">Volver al menu </button>
-		<button onclick="VolverReiniciar()" class="btn btn-Reiniciar">Reiniciar</button>
+		<div class="pause-div">
+			<img class="pause-title" src="/Buttons/Pausa.png">
+		</div>
+	<div class="volvermenu">
+		<img class="tamañoBoton" src="Buttons/Volver_Menu_Gris.png"onclick="VolverMenu()"/>
+  		<img class="tamañoBoton opciones-top" src="Buttons/Volver_Menu_Dorado.png"onclick="VolverMenu()" />
 	</div>
-	<div class="gameover">
-		<br>
-		<br>
-		<br>
-		<button onclick="VolverMenu()" class="btn btn-VolverMenu">Volver al menu </button>
-		<button onclick="VolverReiniciar()" class="btn btn-Reiniciar">Reiniciar</button>
+	<div class="reiniciar">
+		<img class="tamañoBoton1" src="Buttons/Volver_Jugar_Gris.png"onclick="VolverReiniciar()"/>
+  		<img class="tamañoBoton1 reiniciar-top" src="Buttons/Volver_Jugar_Dorado.png"onclick="VolverReiniciar()" />
 	</div>
+	</div>
+
+
 	<style>
 		.pausa1 {
 			position: absolute;
-			background-image: url("/Buttons/Pausa.png");
 			background-size: cover;
 			background-repeat: no-repeat;
 			background-position: center;
@@ -864,17 +864,83 @@
 			z-index: 100;
 			position: fixed;
 			visibility: hidden;
-			width: 20%;
-			height: auto;
-			top: 2%;
-			left: 2%;
+			width:100%;
+			height: 100%;
+			top: 0%;
+			left: 0%;
 		}
-	</style>
-	<style>
-		.gameover {
+		.pausa1 .pause-div .pause-title{
 			position: absolute;
-			background-image: url("/Buttons/Pausa.png");
-			/* Aqui cambiar para la imagen del GameOver xd*/
+			top: 20%;
+			left: 8%;
+		}
+		.pausa1 .pause-div .pause-title{
+			width: 90%;
+ 			 height: auto;
+		}
+		.volvermenu{
+			position: absolute;
+			top: 50%;
+			left: 20%;
+		}
+		.pausa1 .volvermenu .tamañoBoton{
+     		 width: 40%;
+  			height: auto;
+		}
+
+		.pausa1 .volvermenu .opciones-top {
+		display: none;
+		position: absolute;
+		top: 0;;
+		left: 0;
+		z-index: 99;
+		}
+
+		.volvermenu:hover .opciones-top {
+  		display: inline;
+		}	
+		.reiniciar{
+			position: absolute;
+			top: 50%;
+			left: 60%;
+		}
+		.pausa1 .reiniciar .tamañoBoton1{
+     		 width: 70%;
+  			height: auto;
+		}
+
+		.pausa1 .reiniciar .reiniciar-top {
+		display: none;
+		position: absolute;
+		top: 0;;
+		left: 0;
+		z-index: 99;
+		}
+
+		.reiniciar:hover .reiniciar-top {
+  		display: inline;
+		}	
+
+	</style>	
+
+	<div class="gameoverC">
+		<div class="lose-div">
+			<img class="lose-title" src="/Buttons/Victoria_Chaos.png">
+		</div>
+	<div class="volvermenuc">
+		<img class="tamañoBotonc" src="Buttons/Volver_Menu_Gris.png"onclick="VolverMenu()"/>
+  		<img class="tamañoBotonc opciones-topc" src="Buttons/Volver_Menu_Dorado.png"onclick="VolverMenu()" />
+	</div>
+	<div class="reiniciarc">
+		<img class="tamañoBoton1c" src="Buttons/Volver_Jugar_Gris.png"onclick="VolverReiniciar()"/>
+  		<img class="tamañoBoton1c reiniciar-topc" src="Buttons/Volver_Jugar_Dorado.png"onclick="VolverReiniciar()" />
+	</div>
+	</div>
+
+
+	<style>
+		.gameoverC {
+			position: absolute;
 			background-size: cover;
 			background-repeat: no-repeat;
 			background-position: center;
@@ -882,12 +948,148 @@
 			z-index: 100;
 			position: fixed;
 			visibility: hidden;
-			width: 20%;
-			height: auto;
-			top: 2%;
-			left: 2%;
+			width:100%;
+			height: 100%;
+			top: 0%;
+			left: 0%;
 		}
+		.gameoverC .lose-div .lose-title{
+			position: absolute;
+			top: 20%;
+			left: 8%;
+		}
+		.gameoverC .lose-div .lose-title{
+			width: 90%;
+ 			 height: auto;
+		}
+		.volvermenuc{
+			position: absolute;
+			top: 50%;
+			left: 20%;
+		}
+		.gameoverC .volvermenuc .tamañoBotonc{
+     		 width: 40%;
+  			height: auto;
+		}
+
+		.gameoverC .volvermenuc .opciones-topc{
+		display: none;
+		position: absolute;
+		top: 0;;
+		left: 0;
+		z-index: 99;
+		}
+
+		.volvermenuc:hover .opciones-topc {
+  		display: inline;
+		}	
+		.reiniciarc{
+			position: absolute;
+			top: 50%;
+			left: 60%;
+		}
+		.gameoverC .reiniciarc .tamañoBoton1c{
+     		 width: 70%;
+  			height: auto;
+		}
+
+		.gameoverC .reiniciarc .reiniciar-topc{
+		display: none;
+		position: absolute;
+		top: 0;;
+		left: 0;
+		z-index: 99;
+		}
+
+		.reiniciarc:hover .reiniciar-topc {
+  		display: inline;
+		}	
+
 	</style>
+		<div class="gameoverg">
+			<div class="loseg-div">
+				<img class="loseg-title" src="/Buttons/Victoria_Gohan.png">
+			</div>
+		<div class="volvermenug">
+			<img class="tamañoBotong" src="Buttons/Volver_Menu_Gris.png"onclick="VolverMenu()"/>
+			  <img class="tamañoBotong opciones-topg" src="Buttons/Volver_Menu_Dorado.png"onclick="VolverMenu()" />
+		</div>
+		<div class="reiniciarg">
+			<img class="tamañoBoton1g" src="Buttons/Volver_Jugar_Gris.png"onclick="VolverReiniciar()"/>
+			  <img class="tamañoBoton1g reiniciar-topg" src="Buttons/Volver_Jugar_Dorado.png"onclick="VolverReiniciar()" />
+		</div>
+		</div>
+	
+	
+		<style>
+			.gameoverg {
+				position: absolute;
+				background-size: cover;
+				background-repeat: no-repeat;
+				background-position: center;
+				background-color: rgba(0, 0, 0, .5);
+				z-index: 100;
+				position: fixed;
+				visibility: hidden;
+				width:100%;
+				height: 100%;
+				top: 0%;
+				left: 0%;
+			}
+			.gameoverg .loseg-div .loseg-title{
+				position: absolute;
+				top: 20%;
+				left: 8%;
+			}
+			.gameoverg .loseg-div .loseg-title{
+				width: 90%;
+				  height: auto;
+			}
+			.volvermenug{
+				position: absolute;
+				top: 50%;
+				left: 20%;
+			}
+			.gameoverg .volvermenug .tamañoBotong{
+				  width: 40%;
+				  height: auto;
+			}
+	
+			.gameoverg .volvermenug .opciones-topg{
+			display: none;
+			position: absolute;
+			top: 0;;
+			left: 0;
+			z-index: 99;
+			}
+	
+			.volvermenug:hover .opciones-topg {
+			  display: inline;
+			}	
+			.reiniciarg{
+				position: absolute;
+				top: 50%;
+				left: 60%;
+			}
+			.gameoverg .reiniciarg .tamañoBoton1g{
+				  width: 70%;
+				  height: auto;
+			}
+	
+			.gameoverg .reiniciarg .reiniciar-topg{
+			display: none;
+			position: absolute;
+			top: 0;;
+			left: 0;
+			z-index: 99;
+			}
+	
+			.reiniciarg:hover .reiniciar-topg {
+			  display: inline;
+			}	
+	
+		</style>
 	<div id="scene-section"></div>
 
 </body>
+</html>

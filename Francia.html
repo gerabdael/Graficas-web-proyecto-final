@@ -10,6 +10,33 @@
 	<script type="text/javascript" src="js/libs/three/OBJLoader.js"></script>
 	<script type="text/javascript" src="js/libs/three/inflate.min.js"></script>
 	<script type="text/javascript" src="js/libs/jquery/controller.js"></script>
+	<script id="vs0" type="x-shader/x-vertex">
+		
+		varying vec4 col; 
+   
+		   void main() {
+		   if(position.x < 0.0)
+			 col = vec4(1.0, 0.2, 0.5, 1.0); 
+		   else 
+			 col = vec4(0.4, 0.8, 0.3, 1.0); 
+			  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+   
+		   }
+   
+   
+	   </script> 
+	   <script id="fs0" type="x-shader/x-fragment"> 
+   
+		   varying vec4 col;
+	   /*uniform vec3 colorA; */
+		   /*uniform vec3 colorB; */
+		   
+   
+			 void main() {
+			   gl_FragColor = col;
+			 }   
+   
+	   </script> 
 	<script type="text/javascript">
 
 
@@ -40,6 +67,86 @@
 
 		var hitboxJ1;
 
+		//controlles
+		var gamepadAPI = {
+  		controller: {},
+  		turbo: false,
+  		connect: function(evt) {
+			gamepadAPI.controller = evt.gamepad;
+			gamepadAPI.turbo = true;
+			console.log('Gamepad connected.');
+			},
+		disconnect: function(evt) {
+			gamepadAPI.turbo = false;
+			delete gamepadAPI.controller;
+			console.log('Gamepad disconnected.');
+			},
+		update: function() {
+				// clear the buttons cache
+				gamepadAPI.buttonsCache = [];
+				// move the buttons status from the previous frame to the cache
+				for(var k=0; k<gamepadAPI.buttonsStatus.length; k++) {
+					gamepadAPI.buttonsCache[k] = gamepadAPI.buttonsStatus[k];
+				}
+				// clear the buttons status
+				gamepadAPI.buttonsStatus = [];
+				// get the gamepad object
+				var c = gamepadAPI.controller || {};
+
+				// loop through buttons and push the pressed ones to the array
+				var pressed = [];
+				if(c.buttons) {
+					for(var b=0,t=c.buttons.length; b<t; b++) {
+					if(c.buttons[b].pressed) {
+						pressed.push(gamepadAPI.buttons[b]);
+					}
+					}
+				}
+				// loop through axes and push their values to the array
+				var axes = [];
+				if(c.axes) {
+					for(var a=0,x=c.axes.length; a<x; a++) {
+					axes.push(c.axes[a].toFixed(2));
+					}
+				}
+				// assign received values
+				gamepadAPI.axesStatus = axes;
+				gamepadAPI.buttonsStatus = pressed;
+				// return buttons for debugging purposes
+				return pressed;
+			},
+			buttonPressed: function(button, hold) {
+			var newPress = false;
+			// loop through pressed buttons
+			for(var i=0,s=gamepadAPI.buttonsStatus.length; i<s; i++) {
+				// if we found the button we're looking for...
+				if(gamepadAPI.buttonsStatus[i] == button) {
+				// set the boolean variable to true
+				newPress = true;
+				// if we want to check the single press
+				if(!hold) {
+					// loop through the cached states from the previous frame
+					for(var j=0,p=gamepadAPI.buttonsCache.length; j<p; j++) {
+					// if the button was already pressed, ignore new press
+					if(gamepadAPI.buttonsCache[j] == button) {
+						newPress = false;
+					}
+					}
+				}
+				}
+			}
+			return newPress;
+			},
+		 buttons: [
+		'DPad-Up','DPad-Down','DPad-Left','DPad-Right',
+		'Start','Back','Axis-Left','Axis-Right',
+		'LB','RB','Power','A','B','X','Y',
+		],
+  		buttonsCache: [],
+  		buttonsStatus: [],
+ 		 axesStatus: []
+		};
+		//
 
 		//puse buttons
 		var paused = false;
@@ -53,7 +160,9 @@
 		var mixers = [];
 		var mixers_2 = [];
 		// TODO: End Modelo Animacion.
-
+		//particulas
+		var particleSystem;
+		//
 		var lifebar1;
 		var lifebar2;
 		var greenbar1;
@@ -345,20 +454,13 @@
 
 			document.addEventListener('keydown', onKeyDown);
 			document.addEventListener('keyup', onKeyUp);
-
+			window.addEventListener("gamepadconnected", gamepadAPI.connect);
+			window.addEventListener("gamepaddisconnected", gamepadAPI.disconnect);
 
 		});
 
-		window.addEventListener("gamepadconnected", (event) => {
-			console.log("A gamepad connected:");
-			console.log(event.gamepad);
-		});
 
-		window.addEventListener("gamepaddisconnected", (event) => {
-			console.log("A gamepad disconnected:");
-			console.log(event.gamepad);
-		});
-
+			//muertes gohan
 		function aber() {
 			if (!gohanDead) {
 				flag = false;
@@ -369,13 +471,13 @@
 			} else {
 				cancelAnimationFrame(req);
 				req = undefined;
-				$(".gameover").css("visibility", "visible");
+				$(".gameoverC").css("visibility", "visible");
 				volume = 0.2;
 				console.log(volume);
 			}
 
 		}
-
+			//muertes gohan
 		function aber2() {
 			if (!chaosDead) {
 				flagC = false;
@@ -386,7 +488,7 @@
 			} else {
 				cancelAnimationFrame(req);
 				req = undefined;
-				$(".gameover").css("visibility", "visible");
+				$(".gameoverg").css("visibility", "visible");
 				volume = 0.2;
 				console.log(volume);
 			}
@@ -538,7 +640,7 @@
 				}
 				if (String.fromCharCode(event.keyCode) == "P") {
 					paused = !paused;
-					$(".pausa1").css("visibility", "hidden");
+					$(".pause1").css("visibility", "hidden");
 				}
 			}
 		}
@@ -559,7 +661,7 @@
 					if (paused) {
 						cancelAnimationFrame(req);
 						req = undefined;
-						$(".pausa1").css("visibility", "visible");
+						$(".pause1").css("visibility", "visible");
 						volume = 0.2;
 						console.log(volume);
 					} else {
@@ -798,8 +900,8 @@
 					}
 				}
 			}
-
-
+			//particulas velocidad
+			particleSystem.position.y -= 0.11;
 			renderer.render(scene, camera);
 		}
 
@@ -828,6 +930,60 @@
 			var grid = new THREE.GridHelper(50, 10, 0xffffff, 0xffffff);
 			grid.position.y = -1;
 			scene.add(grid);
+			///////Caja de shaders//////
+			var geometry = new THREE.BoxGeometry(1,1,1); 
+
+			var shaderProp = {
+					vertexShader: document.getElementById("vs0").textContent, 
+					fragmentShader: document.getElementById("fs0").textContent
+
+				}; 
+
+				shaderMat = new THREE.ShaderMaterial(shaderProp); 
+				mesh = new THREE.Mesh(geometry, shaderMat);
+				scene.add(mesh); 
+				mesh.position.z = -14;
+				mesh.position.x = 5;
+				mesh.position.y = 1;
+				mesh.scale.x = 2; 
+				mesh.scale.y = 2; 
+				mesh.scale.z = 2; 
+			// create the particle variables
+			var particleCount = 100000,
+				particles = new THREE.Geometry(),
+				pMaterial = new THREE.ParticleBasicMaterial({
+				color: 0xFFFFFF,
+				size: .25,
+				map: THREE.ImageUtils.loadTexture(
+					"/assets/particle.png"
+				),
+				blending: THREE.AdditiveBlending,
+				transparent: true
+				});
+
+			// now create the individual particles
+			for (var p = 0; p < particleCount; p++) {
+
+			// create a particle with random
+			// position values, -250 -> 250
+			var pX = Math.random() * 30-15,
+				pY = Math.random() * 500- 5,
+				pZ =Math.random() * 30-15,
+				particle = new THREE.Vector3(pX, pY, pZ);
+
+			// add it to the geometry
+			particles.vertices.push(particle);
+			}
+
+			// create the particle system
+			particleSystem = new THREE.ParticleSystem(
+				particles,
+				pMaterial);
+
+			// add it to the scene
+			scene.add(particleSystem);	
+
+					 /////////////////// Cubo con Shader /////////////////////////
 
 
 
@@ -840,23 +996,23 @@
 
 <body>
 	<div class="pausa1">
-		<br>
-		<br>
-		<br>
-		<button onclick="VolverMenu()" class="btn btn-VolverMenu">Volver al menu </button>
-		<button onclick="VolverReiniciar()" class="btn btn-Reiniciar">Reiniciar</button>
+		<div class="pause-div">
+			<img class="pause-title" src="/Buttons/Pausa.png">
+		</div>
+	<div class="volvermenu">
+		<img class="tamañoBoton" src="Buttons/Volver_Menu_Gris.png"onclick="VolverMenu()"/>
+  		<img class="tamañoBoton opciones-top" src="Buttons/Volver_Menu_Dorado.png"onclick="VolverMenu()" />
 	</div>
-	<div class="gameover">
-		<br>
-		<br>
-		<br>
-		<button onclick="VolverMenu()" class="btn btn-VolverMenu">Volver al menu </button>
-		<button onclick="VolverReiniciar()" class="btn btn-Reiniciar">Reiniciar</button>
+	<div class="reiniciar">
+		<img class="tamañoBoton1" src="Buttons/Volver_Jugar_Gris.png"onclick="VolverReiniciar()"/>
+  		<img class="tamañoBoton1 reiniciar-top" src="Buttons/Volver_Jugar_Dorado.png"onclick="VolverReiniciar()" />
 	</div>
+	</div>
+
+
 	<style>
 		.pausa1 {
 			position: absolute;
-			background-image: url("/Buttons/Pausa.png");
 			background-size: cover;
 			background-repeat: no-repeat;
 			background-position: center;
@@ -864,17 +1020,83 @@
 			z-index: 100;
 			position: fixed;
 			visibility: hidden;
-			width: 20%;
-			height: auto;
-			top: 2%;
-			left: 2%;
+			width:100%;
+			height: 100%;
+			top: 0%;
+			left: 0%;
 		}
-	</style>
-	<style>
-		.gameover {
+		.pausa1 .pause-div .pause-title{
 			position: absolute;
-			background-image: url("/Buttons/Pausa.png");
-			/* Aqui cambiar para la imagen del GameOver xd*/
+			top: 20%;
+			left: 8%;
+		}
+		.pausa1 .pause-div .pause-title{
+			width: 90%;
+ 			 height: auto;
+		}
+		.volvermenu{
+			position: absolute;
+			top: 50%;
+			left: 20%;
+		}
+		.pausa1 .volvermenu .tamañoBoton{
+     		 width: 40%;
+  			height: auto;
+		}
+
+		.pausa1 .volvermenu .opciones-top {
+		display: none;
+		position: absolute;
+		top: 0;;
+		left: 0;
+		z-index: 99;
+		}
+
+		.volvermenu:hover .opciones-top {
+  		display: inline;
+		}	
+		.reiniciar{
+			position: absolute;
+			top: 50%;
+			left: 60%;
+		}
+		.pausa1 .reiniciar .tamañoBoton1{
+     		 width: 70%;
+  			height: auto;
+		}
+
+		.pausa1 .reiniciar .reiniciar-top {
+		display: none;
+		position: absolute;
+		top: 0;;
+		left: 0;
+		z-index: 99;
+		}
+
+		.reiniciar:hover .reiniciar-top {
+  		display: inline;
+		}	
+
+	</style>	
+
+	<div class="gameoverC">
+		<div class="lose-div">
+			<img class="lose-title" src="/Buttons/Victoria_Chaos.png">
+		</div>
+	<div class="volvermenuc">
+		<img class="tamañoBotonc" src="Buttons/Volver_Menu_Gris.png"onclick="VolverMenu()"/>
+  		<img class="tamañoBotonc opciones-topc" src="Buttons/Volver_Menu_Dorado.png"onclick="VolverMenu()" />
+	</div>
+	<div class="reiniciarc">
+		<img class="tamañoBoton1c" src="Buttons/Volver_Jugar_Gris.png"onclick="VolverReiniciar()"/>
+  		<img class="tamañoBoton1c reiniciar-topc" src="Buttons/Volver_Jugar_Dorado.png"onclick="VolverReiniciar()" />
+	</div>
+	</div>
+
+
+	<style>
+		.gameoverC {
+			position: absolute;
 			background-size: cover;
 			background-repeat: no-repeat;
 			background-position: center;
@@ -882,12 +1104,148 @@
 			z-index: 100;
 			position: fixed;
 			visibility: hidden;
-			width: 20%;
-			height: auto;
-			top: 2%;
-			left: 2%;
+			width:100%;
+			height: 100%;
+			top: 0%;
+			left: 0%;
 		}
+		.gameoverC .lose-div .lose-title{
+			position: absolute;
+			top: 20%;
+			left: 8%;
+		}
+		.gameoverC .lose-div .lose-title{
+			width: 90%;
+ 			 height: auto;
+		}
+		.volvermenuc{
+			position: absolute;
+			top: 50%;
+			left: 20%;
+		}
+		.gameoverC .volvermenuc .tamañoBotonc{
+     		 width: 40%;
+  			height: auto;
+		}
+
+		.gameoverC .volvermenuc .opciones-topc{
+		display: none;
+		position: absolute;
+		top: 0;;
+		left: 0;
+		z-index: 99;
+		}
+
+		.volvermenuc:hover .opciones-topc {
+  		display: inline;
+		}	
+		.reiniciarc{
+			position: absolute;
+			top: 50%;
+			left: 60%;
+		}
+		.gameoverC .reiniciarc .tamañoBoton1c{
+     		 width: 70%;
+  			height: auto;
+		}
+
+		.gameoverC .reiniciarc .reiniciar-topc{
+		display: none;
+		position: absolute;
+		top: 0;;
+		left: 0;
+		z-index: 99;
+		}
+
+		.reiniciarc:hover .reiniciar-topc {
+  		display: inline;
+		}	
+
 	</style>
+		<div class="gameoverg">
+			<div class="loseg-div">
+				<img class="loseg-title" src="/Buttons/Victoria_Gohan.png">
+			</div>
+		<div class="volvermenug">
+			<img class="tamañoBotong" src="Buttons/Volver_Menu_Gris.png"onclick="VolverMenu()"/>
+			  <img class="tamañoBotong opciones-topg" src="Buttons/Volver_Menu_Dorado.png"onclick="VolverMenu()" />
+		</div>
+		<div class="reiniciarg">
+			<img class="tamañoBoton1g" src="Buttons/Volver_Jugar_Gris.png"onclick="VolverReiniciar()"/>
+			  <img class="tamañoBoton1g reiniciar-topg" src="Buttons/Volver_Jugar_Dorado.png"onclick="VolverReiniciar()" />
+		</div>
+		</div>
+	
+	
+		<style>
+			.gameoverg {
+				position: absolute;
+				background-size: cover;
+				background-repeat: no-repeat;
+				background-position: center;
+				background-color: rgba(0, 0, 0, .5);
+				z-index: 100;
+				position: fixed;
+				visibility: hidden;
+				width:100%;
+				height: 100%;
+				top: 0%;
+				left: 0%;
+			}
+			.gameoverg .loseg-div .loseg-title{
+				position: absolute;
+				top: 20%;
+				left: 8%;
+			}
+			.gameoverg .loseg-div .loseg-title{
+				width: 90%;
+				  height: auto;
+			}
+			.volvermenug{
+				position: absolute;
+				top: 50%;
+				left: 20%;
+			}
+			.gameoverg .volvermenug .tamañoBotong{
+				  width: 40%;
+				  height: auto;
+			}
+	
+			.gameoverg .volvermenug .opciones-topg{
+			display: none;
+			position: absolute;
+			top: 0;;
+			left: 0;
+			z-index: 99;
+			}
+	
+			.volvermenug:hover .opciones-topg {
+			  display: inline;
+			}	
+			.reiniciarg{
+				position: absolute;
+				top: 50%;
+				left: 60%;
+			}
+			.gameoverg .reiniciarg .tamañoBoton1g{
+				  width: 70%;
+				  height: auto;
+			}
+	
+			.gameoverg .reiniciarg .reiniciar-topg{
+			display: none;
+			position: absolute;
+			top: 0;;
+			left: 0;
+			z-index: 99;
+			}
+	
+			.reiniciarg:hover .reiniciar-topg {
+			  display: inline;
+			}	
+	
+		</style>
 	<div id="scene-section"></div>
 
 </body>
+</html>
