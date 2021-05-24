@@ -40,6 +40,11 @@
 
 		var hitboxJ1;
 
+
+		//puse buttons
+		var paused=false;
+		var req;
+		//
 		var action_1;
 		var action_2;
 		var action_3;
@@ -339,6 +344,16 @@
 
 		});
 
+		window.addEventListener("gamepadconnected", (event) => {
+			console.log("A gamepad connected:");
+			console.log(event.gamepad);
+		});
+
+		window.addEventListener("gamepaddisconnected", (event) => {
+		console.log("A gamepad disconnected:");
+		console.log(event.gamepad);
+		});
+
 		function aber() {
 			flag = false;
 			actionIdle.play();
@@ -367,7 +382,15 @@
 
 			});
 		}
+		function VolverReiniciar(){
+		location.replace("Francia.html"); 
 
+	} 
+
+	function VolverMenu(){
+		location.replace("index.html"); 
+
+	}
 
 		function onKeyDown(event) {
 			keys[String.fromCharCode(event.keyCode)] = true;
@@ -488,6 +511,10 @@
 					gohanStates = "attacking";
 				}
 			}
+			if (String.fromCharCode(event.keyCode) == "P") {
+				paused = !paused;
+				$(".pausa1").css("visibility", "hidden"); 
+			}
 		}
 		function onKeyUp(event) {
 			keys[String.fromCharCode(event.keyCode)] = false;
@@ -501,12 +528,25 @@
 				mixers[0].stopAllAction();
 				actionIdleC.play();
 			}
+			if (String.fromCharCode(event.keyCode) == "P") {
+				if(paused){
+					cancelAnimationFrame(req);
+					req= undefined;
+					$(".pausa1").css("visibility", "visible"); 
+					volume = 0.2;
+					console.log(volume);
+				}else{
+					if(!req){
+						render();
+					}
+				}
+			}
 		}
 
 
 
 		function render() {
-			requestAnimationFrame(render);
+			req=requestAnimationFrame(render);
 			deltaTime = clock.getDelta();
 
 
@@ -731,9 +771,30 @@
 </head>
 
 <body>
-
+	<div class="pausa1"> 
+		<br>
+		<br>
+		<br>
+		<button onclick="VolverMenu()" class="btn btn-VolverMenu">Volver al menu </button>
+            <button onclick="VolverReiniciar()" class="btn btn-Reiniciar">Reiniciar</button>
+	</div> 
+	<style>
+		.pausa1 {
+			position: absolute;
+			background-image:url("/Buttons/Pausa.png");
+			background-size: cover;
+			background-repeat: no-repeat;
+			background-position: center;
+			background-color: rgba(0,0,0, .5);
+			z-index: 100;
+			position: fixed;
+			visibility: hidden;
+			width: 20%;
+			height: auto;
+			top: 2%;
+			left: 2%;
+		}
+	</style>
 	<div id="scene-section"></div>
 
 </body>
-
-</html>

@@ -173,7 +173,15 @@
 
 .pausa1 {
   position: absolute;
-    width: 20%;
+  background-image:url("/Buttons/Pausa.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: rgba(0,0,0, .5);
+  z-index: 100;
+  position: fixed;
+  visibility: hidden;
+  width: 20%;
   height: auto;
   top: 2%;
   left: 2%;
