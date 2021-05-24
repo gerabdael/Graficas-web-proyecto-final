@@ -42,7 +42,7 @@
 
 
 		//puse buttons
-		var paused=false;
+		var paused = false;
 		var req;
 		//
 		var action_1;
@@ -64,6 +64,9 @@
 
 		var gohanLife = 1;
 		var chaosLife = 1;
+
+		var gohanDead = false;
+		var chaosDead = false;
 
 		var gohanHit = false;
 		var chaosHit = false;
@@ -250,6 +253,7 @@
 				actionTauntC = personaje.mixer.clipAction(TauntC);
 				actionVictoryC = personaje.mixer.clipAction(VictoryC);
 				actionDefeatC = personaje.mixer.clipAction(DefeatC);
+				actionDefeatC.setLoop(THREE.LoopOnce);
 
 				actionIdleC.play();
 				chaosStates = "idle";
@@ -311,6 +315,7 @@
 				actionTaunt = personaje2.mixer.clipAction(Taunt);
 				actionVictory = personaje2.mixer.clipAction(Victory);
 				actionDefeat = personaje2.mixer.clipAction(Defeat);
+				actionDefeat.setLoop(THREE.LoopOnce);
 
 				actionIdle.play();
 				gohanStates = "idle";
@@ -350,22 +355,41 @@
 		});
 
 		window.addEventListener("gamepaddisconnected", (event) => {
-		console.log("A gamepad disconnected:");
-		console.log(event.gamepad);
+			console.log("A gamepad disconnected:");
+			console.log(event.gamepad);
 		});
 
 		function aber() {
-			flag = false;
-			actionIdle.play();
-			gohanStates = "idle";
-			chaosHit = false;
+			if (!gohanDead) {
+				flag = false;
+				actionIdle.play();
+				gohanStates = "idle";
+				chaosHit = false;
+				console.log("a");
+			} else {
+				cancelAnimationFrame(req);
+				req = undefined;
+				$(".gameover").css("visibility", "visible");
+				volume = 0.2;
+				console.log(volume);
+			}
+
 		}
 
 		function aber2() {
-			flagC = false;
-			actionIdleC.play();
-			chaosStates = "idle";
-			gohanHit = false;
+			if (!chaosDead) {
+				flagC = false;
+				actionIdleC.play();
+				chaosStates = "idle";
+				gohanHit = false;
+				console.log("b");
+			} else {
+				cancelAnimationFrame(req);
+				req = undefined;
+				$(".gameover").css("visibility", "visible");
+				volume = 0.2;
+				console.log(volume);
+			}
 		}
 
 		function loadOBJWithMTL(path, objFile, mtlFile, onLoadCallback) {
@@ -382,171 +406,176 @@
 
 			});
 		}
-		function VolverReiniciar(){
-		location.replace("Francia.html"); 
+		function VolverReiniciar() {
+			location.replace("Francia.html");
 
-	} 
+		}
 
-	function VolverMenu(){
-		location.replace("index.html"); 
+		function VolverMenu() {
+			location.replace("index.html");
 
-	}
+		}
 
 		function onKeyDown(event) {
 			keys[String.fromCharCode(event.keyCode)] = true;
-			if (String.fromCharCode(event.keyCode) == "A") {
-				if (!flagC) {
-					mixers[0].stopAllAction();
-					actionbackwardC.time = 7;
-					actionbackwardC.play();
-					flagC = true;
+			if (!chaosDead && !gohanDead) {
+				if (String.fromCharCode(event.keyCode) == "A") {
+					if (!flagC) {
+						mixers[0].stopAllAction();
+						actionbackwardC.time = 7;
+						actionbackwardC.play();
+						flagC = true;
+					}
+					if (actionbackwardC.time >= 0 && actionbackwardC.time <= 0.10) {
+						actionbackwardC.time = 7;
+					}
 				}
-				if (actionbackwardC.time >= 0 && actionbackwardC.time <= 0.10) {
-					actionbackwardC.time = 7;
+				if (String.fromCharCode(event.keyCode) == "D") {
+					if (!flagC) {
+						mixers[0].stopAllAction();
+						actionforwardC.time = 5.5;
+						actionforwardC.play();
+						flagC = true;
+					}
+					if (actionforwardC.time >= 0 && actionforwardC.time <= 0.15) {
+						actionforwardC.time = 5.5;
+					}
 				}
-			}
-			if (String.fromCharCode(event.keyCode) == "D") {
-				if (!flagC) {
-					mixers[0].stopAllAction();
-					actionforwardC.time = 5.5;
-					actionforwardC.play();
-					flagC = true;
+				if (String.fromCharCode(event.keyCode) == "Q") {
+					if (!flagC) {
+						mixers[0].stopAllAction();
+						actionPunch1C.time = 11.5;
+						actionPunch1C.play();
+						flagC = true;
+						chaosStates = "attacking";
+					}
 				}
-				if (actionforwardC.time >= 0 && actionforwardC.time <= 0.15) {
-					actionforwardC.time = 5.5;
+				if (String.fromCharCode(event.keyCode) == "E") {
+					if (!flagC) {
+						mixers[0].stopAllAction();
+						actionPunch2C.time = 13.5;
+						actionPunch2C.play();
+						flagC = true;
+						chaosStates = "attacking";
+					}
 				}
-			}
-			if (String.fromCharCode(event.keyCode) == "Q") {
-				if (!flagC) {
-					mixers[0].stopAllAction();
-					actionPunch1C.time = 11.5;
-					actionPunch1C.play();
-					flagC = true;
-					chaosStates = "attacking";
+				if (String.fromCharCode(event.keyCode) == "Z") {
+					if (!flagC) {
+						mixers[0].stopAllAction();
+						actionKick1C.time = 15;
+						actionKick1C.play();
+						flagC = true;
+						chaosStates = "attacking";
+					}
 				}
-			}
-			if (String.fromCharCode(event.keyCode) == "E") {
-				if (!flagC) {
-					mixers[0].stopAllAction();
-					actionPunch2C.time = 13.5;
-					actionPunch2C.play();
-					flagC = true;
-					chaosStates = "attacking";
+				if (String.fromCharCode(event.keyCode) == "C") {
+					if (!flagC) {
+						mixers[0].stopAllAction();
+						actionKick2C.time = 17.5;
+						actionKick2C.play();
+						flagC = true;
+						chaosStates = "attacking";
+					}
 				}
-			}
-			if (String.fromCharCode(event.keyCode) == "Z") {
-				if (!flagC) {
-					mixers[0].stopAllAction();
-					actionKick1C.time = 15;
-					actionKick1C.play();
-					flagC = true;
-					chaosStates = "attacking";
+				//
+				if (String.fromCharCode(event.keyCode) == "d") {
+					if (!flag) {
+						mixers_2[0].stopAllAction();
+						actionforward.time = 5;
+						actionforward.play();
+						flag = true;
+					}
+					if (actionforward.time >= 0 && actionforward.time <= 0.15) {
+						actionforward.time = 5;
+					}
 				}
-			}
-			if (String.fromCharCode(event.keyCode) == "C") {
-				if (!flagC) {
-					mixers[0].stopAllAction();
-					actionKick2C.time = 17.5;
-					actionKick2C.play();
-					flagC = true;
-					chaosStates = "attacking";
+				if (String.fromCharCode(event.keyCode) == "f") {
+					if (!flag) {
+						mixers_2[0].stopAllAction();
+						actionbackward.time = 6;
+						actionbackward.play();
+						flag = true;
+					}
+					if (actionbackward.time >= 0 && actionbackward.time <= 0.10) {
+						actionbackward.time = 6;
+					}
 				}
-			}
-			//
-			if (String.fromCharCode(event.keyCode) == "d") {
-				if (!flag) {
-					mixers_2[0].stopAllAction();
-					actionforward.time = 5;
-					actionforward.play();
-					flag = true;
+				if (String.fromCharCode(event.keyCode) == "g") {
+					if (!flag) {
+						mixers_2[0].stopAllAction();
+						actionPunch1.time = 7;
+						actionPunch1.play();
+						flag = true;
+						gohanStates = "attacking";
+					}
 				}
-				if (actionforward.time >= 0 && actionforward.time <= 0.15) {
-					actionforward.time = 5;
+				if (String.fromCharCode(event.keyCode) == "i") {
+					if (!flag) {
+						mixers_2[0].stopAllAction();
+						actionPunch2.time = 8;
+						actionPunch2.play();
+						flag = true;
+						gohanStates = "attacking";
+					}
 				}
-			}
-			if (String.fromCharCode(event.keyCode) == "f") {
-				if (!flag) {
-					mixers_2[0].stopAllAction();
-					actionbackward.time = 6;
-					actionbackward.play();
-					flag = true;
+				if (String.fromCharCode(event.keyCode) == "a") {
+					if (!flag) {
+						mixers_2[0].stopAllAction();
+						actionKick1.time = 9.5;
+						actionKick1.play();
+						flag = true;
+						gohanStates = "attacking";
+					}
 				}
-				if (actionbackward.time >= 0 && actionbackward.time <= 0.10) {
-					actionbackward.time = 6;
+				if (String.fromCharCode(event.keyCode) == "c") {
+					if (!flag) {
+						mixers_2[0].stopAllAction();
+						actionKick2.time = 11.5;
+						actionKick2.play();
+						flag = true;
+						gohanStates = "attacking";
+					}
 				}
-			}
-			if (String.fromCharCode(event.keyCode) == "g") {
-				if (!flag) {
-					mixers_2[0].stopAllAction();
-					actionPunch1.time = 7;
-					actionPunch1.play();
-					flag = true;
-					gohanStates = "attacking";
+				if (String.fromCharCode(event.keyCode) == "P") {
+					paused = !paused;
+					$(".pausa1").css("visibility", "hidden");
 				}
-			}
-			if (String.fromCharCode(event.keyCode) == "i") {
-				if (!flag) {
-					mixers_2[0].stopAllAction();
-					actionPunch2.time = 8;
-					actionPunch2.play();
-					flag = true;
-					gohanStates = "attacking";
-				}
-			}
-			if (String.fromCharCode(event.keyCode) == "a") {
-				if (!flag) {
-					mixers_2[0].stopAllAction();
-					actionKick1.time = 9.5;
-					actionKick1.play();
-					flag = true;
-					gohanStates = "attacking";
-				}
-			}
-			if (String.fromCharCode(event.keyCode) == "c") {
-				if (!flag) {
-					mixers_2[0].stopAllAction();
-					actionKick2.time = 11.5;
-					actionKick2.play();
-					flag = true;
-					gohanStates = "attacking";
-				}
-			}
-			if (String.fromCharCode(event.keyCode) == "P") {
-				paused = !paused;
-				$(".pausa1").css("visibility", "hidden"); 
 			}
 		}
 		function onKeyUp(event) {
 			keys[String.fromCharCode(event.keyCode)] = false;
-			if (String.fromCharCode(event.keyCode) == "d" || String.fromCharCode(event.keyCode) == "f") {
-				flag = false;
-				mixers_2[0].stopAllAction();
-				actionIdle.play();
-			}
-			if (String.fromCharCode(event.keyCode) == "A" || String.fromCharCode(event.keyCode) == "D") {
-				flagC = false;
-				mixers[0].stopAllAction();
-				actionIdleC.play();
-			}
-			if (String.fromCharCode(event.keyCode) == "P") {
-				if(paused){
-					cancelAnimationFrame(req);
-					req= undefined;
-					$(".pausa1").css("visibility", "visible"); 
-					volume = 0.2;
-					console.log(volume);
-				}else{
-					if(!req){
-						render();
+			if (!chaosDead && !gohanDead) {
+				if (String.fromCharCode(event.keyCode) == "d" || String.fromCharCode(event.keyCode) == "f") {
+					flag = false;
+					mixers_2[0].stopAllAction();
+					actionIdle.play();
+				}
+				if (String.fromCharCode(event.keyCode) == "A" || String.fromCharCode(event.keyCode) == "D") {
+					flagC = false;
+					mixers[0].stopAllAction();
+					actionIdleC.play();
+				}
+				if (String.fromCharCode(event.keyCode) == "P") {
+					if (paused) {
+						cancelAnimationFrame(req);
+						req = undefined;
+						$(".pausa1").css("visibility", "visible");
+						volume = 0.2;
+						console.log(volume);
+					} else {
+						if (!req) {
+							render();
+						}
 					}
 				}
 			}
+
 		}
 
 
 
 		function render() {
-			req=requestAnimationFrame(render);
+			req = requestAnimationFrame(render);
 			deltaTime = clock.getDelta();
 
 
@@ -562,6 +591,43 @@
 			}
 
 			if (loadComplete) {
+				//
+				if (gohanLife <= 0 && !gohanDead) {
+					console.log("Gohan se muere");
+					gohanDead = true;
+					mixers_2[0].stopAllAction();
+					mixers[0].stopAllAction();
+					actionVictoryC.play();
+					actionVictoryC.time = 22;
+					actionDefeat.play();
+					actionDefeat.time = 21;
+				}
+
+				if (actionVictoryC.time >= 0 && actionVictoryC.time <= 0.1) {
+					actionVictoryC.time = 22;
+				}
+
+				if (actionDefeat.time >= 0 && actionDefeat.time <= 0.1) {
+					actionDefeat.time = 21;
+				}
+
+				if (chaosLife <= 0 && !chaosDead) {
+					chaosDead = true;
+					mixers[0].stopAllAction();
+					mixers_2[0].stopAllAction();
+					actionVictory.play();
+					actionVictory.time = 18;
+					actionDefeatC.play();
+					actionDefeatC.time = 25;
+				}
+
+				if (actionVictory.time >= 0 && actionVictory.time <= 0.1) {
+					actionVictory.time = 18;
+				}
+
+				if (actionDefeatC.time >= 0 && actionDefeatC.time <= 0.1) {
+					actionDefeatC.time = 25;
+				}
 				//
 				//ANIMACION PERSONAJE 1
 				if (mixers.length > 0) {
@@ -590,18 +656,20 @@
 				cuboHitGohan = scene.getObjectByName("cuboHit2");
 				cuboHitChaos = scene.getObjectByName("cuboHit1");
 
-				if (keys["A"] || button[2]) {
-					forward = -5;
-				} else if (keys["D"]) {
-					forward = 5;
+				if (!chaosDead && !gohanDead) {
+					if (keys["A"] || button[2]) {
+						forward = -5;
+					} else if (keys["D"]) {
+						forward = 5;
 
-				}
+					}
 
-				if (keys["d"]) {
-					forward2 = 5;
-					//flag = true;
-				} else if (keys["f"]) {
-					forward2 = -5;
+					if (keys["d"]) {
+						forward2 = 5;
+						//flag = true;
+					} else if (keys["f"]) {
+						forward2 = -5;
+					}
 				}
 
 				if (keys["'"]) {
@@ -771,21 +839,46 @@
 </head>
 
 <body>
-	<div class="pausa1"> 
+	<div class="pausa1">
 		<br>
 		<br>
 		<br>
 		<button onclick="VolverMenu()" class="btn btn-VolverMenu">Volver al menu </button>
-            <button onclick="VolverReiniciar()" class="btn btn-Reiniciar">Reiniciar</button>
-	</div> 
+		<button onclick="VolverReiniciar()" class="btn btn-Reiniciar">Reiniciar</button>
+	</div>
+	<div class="gameover">
+		<br>
+		<br>
+		<br>
+		<button onclick="VolverMenu()" class="btn btn-VolverMenu">Volver al menu </button>
+		<button onclick="VolverReiniciar()" class="btn btn-Reiniciar">Reiniciar</button>
+	</div>
 	<style>
 		.pausa1 {
 			position: absolute;
-			background-image:url("/Buttons/Pausa.png");
+			background-image: url("/Buttons/Pausa.png");
 			background-size: cover;
 			background-repeat: no-repeat;
 			background-position: center;
-			background-color: rgba(0,0,0, .5);
+			background-color: rgba(0, 0, 0, .5);
+			z-index: 100;
+			position: fixed;
+			visibility: hidden;
+			width: 20%;
+			height: auto;
+			top: 2%;
+			left: 2%;
+		}
+	</style>
+	<style>
+		.gameover {
+			position: absolute;
+			background-image: url("/Buttons/Pausa.png");
+			/* Aqui cambiar para la imagen del GameOver xd*/
+			background-size: cover;
+			background-repeat: no-repeat;
+			background-position: center;
+			background-color: rgba(0, 0, 0, .5);
 			z-index: 100;
 			position: fixed;
 			visibility: hidden;

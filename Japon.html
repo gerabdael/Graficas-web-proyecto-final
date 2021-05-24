@@ -2,38 +2,76 @@
 
 <head>
 
-	<title>Japon</title>
+	<title>Francia</title>
 	<script type="text/javascript" src="js/libs/jquery/jquery-2.1.4.min.js"></script>
 	<script type="text/javascript" src="js/libs/three/three2.js"></script>
-	<script type="text/javascript" src="js/libs/three/FBXLoader.js"></script>
 	<script type="text/javascript" src="js/libs/three/MTLLoader.js"></script>
+	<script type="text/javascript" src="js/libs/three/FBXLoader.js"></script>
 	<script type="text/javascript" src="js/libs/three/OBJLoader.js"></script>
 	<script type="text/javascript" src="js/libs/three/inflate.min.js"></script>
+	<script type="text/javascript" src="js/libs/jquery/controller.js"></script>
 	<script type="text/javascript">
+
+
 
 		var scene;
 		var camera;
 		var renderer;
 		var controls;
 		var objectosConColision = [];
+		var colisionHitBoxes = [];
+		var gohanStates;
+		var chaosStates;
 		var clock;
 		var deltaTime;
 		var keys = {};
-		var actions1 = [];
+		var button = {};
+		var flag = false;
+		var flagC = false;
+		var jugadores = [];
+		var movements = [];
 		var action1;
 		var action2;
 		var action3;
+		var action4;
+
+		var firstBB;
+		var secondBB;
+
+		var hitboxJ1;
+
+
+		//puse buttons
+		var paused = false;
+		var req;
+		//
+		var action_1;
+		var action_2;
+		var action_3;
+		var action_4;
+		// TODO: Modelo con animacion.var
+		var mixers = [];
+		var mixers_2 = [];
+		// TODO: End Modelo Animacion.
 
 		var lifebar1;
 		var lifebar2;
 		var greenbar1;
 		var greenbar2;
 
+		var cuboHitChaos;
+		var cuboHitGohan;
 
-		mixers = [];
-		var mixers_2 = [];
+		var gohanLife = 1;
+		var chaosLife = 1;
 
-		var isWorldReady = [false, false];
+		var gohanDead = false;
+		var chaosDead = false;
+
+		var gohanHit = false;
+		var chaosHit = false;
+
+		var isWorldReady = [false, false, false, false, false, false, false];
 
 		var rayCaster;
 
@@ -42,7 +80,6 @@
 			rayCaster = new THREE.Raycaster();
 
 			setupScene();
-
 			camera.misRayos = [
 				new THREE.Vector3(0, 0, 1),
 				new THREE.Vector3(0, 0, -1),
@@ -58,12 +95,13 @@
 				box7.position.x = -6;
 				box7.position.z = 0;
 				box7.rotation.y = THREE.Math.degToRad(-90);
+				box7.name = "box7";
 
 				var box8 = object.clone();
 				box8.position.x = 8;
 				box8.position.z = 0;
 				box8.rotation.y = THREE.Math.degToRad(90);
-
+				box8.name = "box8";
 
 				scene.add(box7);
 				scene.add(box8);
@@ -77,7 +115,7 @@
 
 			loadOBJWithMTL("assets/", "escenario3.obj", "escenario3.mtl", (object) => {
 				object.position.z = -10;
-				object.position.x = -2;
+				object.position.x = 3;
 
 
 				scene.add(object);
@@ -87,9 +125,9 @@
 			loadOBJWithMTL("assets/", "HPbar1.obj", "HPbar1.mtl", (bar1) => {
 				bar1.position.z = -10;
 				bar1.position.x = -5;
-				bar1.position.y = -3;
-				
-				bar1.name="bar1";
+				bar1.position.y = -5;
+
+				bar1.name = "bar1";
 
 				scene.add(bar1);
 				isWorldReady[2] = true;
@@ -98,126 +136,261 @@
 			loadOBJWithMTL("assets/", "HP1.obj", "HP1.mtl", (bar1) => {
 				bar1.position.z = -10;
 				bar1.position.x = -5;
-				bar1.position.y = -3;
-				
-				bar1.name="hp1";
+				bar1.position.y = -5;
+
+				bar1.name = "hp1";
 
 				scene.add(bar1);
-				isWorldReady[2] = true;
+				isWorldReady[3] = true;
 			});
 
 			loadOBJWithMTL("assets/", "HPbar2.obj", "HPbar2.mtl", (bar2) => {
 				bar2.position.z = -10;
 				bar2.position.x = -1;
-				bar2.position.y = -3;
-				
-				bar2.name="bar2";
+				bar2.position.y = -5;
+
+				bar2.name = "bar2";
 
 				scene.add(bar2);
-				isWorldReady[3] = true;
+				isWorldReady[4] = true;
 			});
 
 			loadOBJWithMTL("assets/", "HP2.obj", "HP2.mtl", (bar2) => {
 				bar2.position.z = -10;
-				bar2.position.x = -1;
-				bar2.position.y = -3;
-				
-				bar2.name="hp2";
+				bar2.position.x = 15.2;
+				bar2.position.y = -5;
+
+				bar2.name = "hp2";
 
 				scene.add(bar2);
-				isWorldReady[3] = true;
+				isWorldReady[5] = true;
 			});
 
+			loadOBJWithMTL("assets/", "cuboHit.obj", "cuboHit.mtl", (cuboHit) => {
+				cuboHit2 = cuboHit.clone();
+				cuboHit.position.z = -6;
+				cuboHit.position.x = 0;
+				cuboHit.position.y = -10;
+
+				cuboHit2.position.z = -6;
+				cuboHit2.position.x = 10;
+				cuboHit2.position.y = -10;
+
+				cuboHit.name = "cuboHit1";
+				cuboHit2.name = "cuboHit2";
+
+				cuboHit.misRayos = [
+					new THREE.Vector3(0, 0, 1),
+					new THREE.Vector3(0, 0, -1),
+					new THREE.Vector3(1, 0, 0),
+					new THREE.Vector3(-1, 0, 0)
+				];
+
+				cuboHit2.misRayos = [
+					new THREE.Vector3(0, 0, 1),
+					new THREE.Vector3(0, 0, -1),
+					new THREE.Vector3(1, 0, 0),
+					new THREE.Vector3(-1, 0, 0)
+				];
+
+				colisionHitBoxes.push(cuboHit);
+				colisionHitBoxes.push(cuboHit2);
+
+				//cuboHit.visible = false;
+				//cuboHit2.visible = false;
+
+				scene.add(cuboHit);
+				scene.add(cuboHit2);
+				isWorldReady[6] = true;
+			});
+
+			// create an AudioListener and add it to the camera
+			const listener = new THREE.AudioListener();
+			camera.add(listener);
+
+			// create a global audio source
+			const sound = new THREE.Audio(listener);
+
+			// load a sound and set it as the Audio object's buffer
+			const audioLoader = new THREE.AudioLoader();
+			audioLoader.load('assets/Theme-OST.ogg', function (buffer) {
+				sound.setBuffer(buffer);
+				sound.setLoop(true);
+				sound.setVolume(0.0);
+				sound.play();
+			});
 			var loader = new THREE.FBXLoader();
 			loader.load('assets/ChaosAnimations.fbx', function (personaje) {
 
 				personaje.mixer = new THREE.AnimationMixer(personaje);
 
 				mixers.push(personaje.mixer);
+				const clips = personaje.animations;
+				const forwardC = THREE.AnimationClip.findByName(clips, 'Forward');
+				const idleC = THREE.AnimationClip.findByName(clips, 'Idle');
+				const backwardC = THREE.AnimationClip.findByName(clips, 'Backward');
+				const headbuttC = THREE.AnimationClip.findByName(clips, 'HeadButt');
+				const Punch1C = THREE.AnimationClip.findByName(clips, 'Punch1');
+				const Punch2C = THREE.AnimationClip.findByName(clips, 'Punch2');
+				const Kick1C = THREE.AnimationClip.findByName(clips, 'Kick1');
+				const Kick2C = THREE.AnimationClip.findByName(clips, 'Kick2');
+				const TauntC = THREE.AnimationClip.findByName(clips, 'Taunt');
+				const VictoryC = THREE.AnimationClip.findByName(clips, 'Victory');
+				const DefeatC = THREE.AnimationClip.findByName(clips, 'Defeat');
 
-				var action = personaje.mixer.clipAction(personaje.animations[0]);
+				actionforwardC = personaje.mixer.clipAction(forwardC);
+				actionIdleC = personaje.mixer.clipAction(idleC);
+				actionbackwardC = personaje.mixer.clipAction(backwardC);
+				actionHeadbuttC = personaje.mixer.clipAction(headbuttC);
+				actionPunch1C = personaje.mixer.clipAction(Punch1C);
+				actionPunch1C.setLoop(THREE.LoopOnce);
+				actionPunch2C = personaje.mixer.clipAction(Punch2C);
+				actionPunch2C.setLoop(THREE.LoopOnce);
+				actionKick1C = personaje.mixer.clipAction(Kick1C);
+				actionKick1C.setLoop(THREE.LoopOnce);
+				actionKick2C = personaje.mixer.clipAction(Kick2C);
+				actionKick2C.setLoop(THREE.LoopOnce);
+				actionTauntC = personaje.mixer.clipAction(TauntC);
+				actionVictoryC = personaje.mixer.clipAction(VictoryC);
+				actionDefeatC = personaje.mixer.clipAction(DefeatC);
+				actionDefeatC.setLoop(THREE.LoopOnce);
 
-				action.play();
+				actionIdleC.play();
+				chaosStates = "idle";
 
 
-
-
-				personaje.position.z= -6;
-				personaje.position.x= 0;
-				personaje.position.y= .5;
-				personaje.scale.set(0.03, 0.03, 0.03);
-				personaje.rotation.y = THREE.Math.degToRad(90);
+				personaje.position.z = -6;
+				personaje.position.x = 0;
+				personaje.position.y = .5;
 				personaje.misRayos = [
 					new THREE.Vector3(0, 0, 1),
 					new THREE.Vector3(0, 0, -1),
 					new THREE.Vector3(1, 0, 0),
 					new THREE.Vector3(-1, 0, 0)
 				];
+				personaje.scale.set(0.03, 0.03, 0.03);
+				personaje.rotation.y = THREE.Math.degToRad(90);
 
+				personaje.name = "Jugador1";
 
 				scene.add(personaje);
-
 				jugadores.push(personaje);
 
+				mixers[0].addEventListener('finished', aber2);
 			});
 
 			var loader2 = new THREE.FBXLoader();
-			loader2.load('assets/Gohan_Animations.fbx', function (personaje2) {
+			loader2.load('assets/GohanAnimations1.fbx', function (personaje2) {
 
 				personaje2.mixer = new THREE.AnimationMixer(personaje2);
 
-				mixers.push(personaje2.mixer);
+				mixers_2.push(personaje2.mixer);
 
-				action1 = personaje2.mixer.clipAction(personaje2.animations[0]);
-				action2 = personaje2.mixer.clipAction(personaje2.animations[1]);
-				action3 = personaje2.mixer.clipAction(personaje2.animations[2]);
-				action4 = personaje2.mixer.clipAction(personaje2.animations[3]);
+				const clips = personaje2.animations;
 
-				action1.play();
-				action2.play();
-				action3.play();
-				action4.play();
+				const forward = THREE.AnimationClip.findByName(clips, 'Forward');
+				const idle = THREE.AnimationClip.findByName(clips, 'Idle');
+				const backward = THREE.AnimationClip.findByName(clips, 'Backward');
+				const headbutt = THREE.AnimationClip.findByName(clips, 'HeadButt');
+				const Punch1 = THREE.AnimationClip.findByName(clips, 'Punch1');
+				const Punch2 = THREE.AnimationClip.findByName(clips, 'Punch2');
+				const Kick1 = THREE.AnimationClip.findByName(clips, 'Kick1');
+				const Kick2 = THREE.AnimationClip.findByName(clips, 'Kick2');
+				const Taunt = THREE.AnimationClip.findByName(clips, 'Taunt');
+				const Victory = THREE.AnimationClip.findByName(clips, 'Victory');
+				const Defeat = THREE.AnimationClip.findByName(clips, 'Defeat');
 
-				//Action.setLoop( THREE.LoopOnce);
+				actionforward = personaje2.mixer.clipAction(forward);
+				actionIdle = personaje2.mixer.clipAction(idle);
+				actionbackward = personaje2.mixer.clipAction(backward);
+				actionHeadbutt = personaje2.mixer.clipAction(headbutt);
+				actionPunch1 = personaje2.mixer.clipAction(Punch1);
+				actionPunch1.setLoop(THREE.LoopOnce);
+				actionPunch2 = personaje2.mixer.clipAction(Punch2);
+				actionPunch2.setLoop(THREE.LoopOnce);
+				actionKick1 = personaje2.mixer.clipAction(Kick1);
+				actionKick1.setLoop(THREE.LoopOnce);
+				actionKick2 = personaje2.mixer.clipAction(Kick2);
+				actionKick2.setLoop(THREE.LoopOnce);
+				actionTaunt = personaje2.mixer.clipAction(Taunt);
+				actionVictory = personaje2.mixer.clipAction(Victory);
+				actionDefeat = personaje2.mixer.clipAction(Defeat);
+				actionDefeat.setLoop(THREE.LoopOnce);
 
-				action1.play = 1;
-				action2.play = 0;
-				action3.play = 0;
-				action4.play = 0;
-
-				action1.weight = 1;
-				action2.weight = 0;
-				action3.weight = 0;
-				action4.weight = 0;
+				actionIdle.play();
+				gohanStates = "idle";
 
 
-				personaje2.position.z= -6;
-				personaje2.position.x= 10;
-				personaje2.position.y= .5;
-				personaje2.scale.set(0.03, 0.03, 0.03);
-				personaje2.rotation.y = THREE.Math.degToRad(-90);
+
+				personaje2.position.z = -6;
+				personaje2.position.x = 10;
+				personaje2.position.y = .5;
 				personaje2.misRayos = [
 					new THREE.Vector3(0, 0, 1),
 					new THREE.Vector3(0, 0, -1),
 					new THREE.Vector3(1, 0, 0),
 					new THREE.Vector3(-1, 0, 0)
 				];
+				personaje2.scale.set(0.03, 0.03, 0.03);
+				personaje2.rotation.y = THREE.Math.degToRad(-90);
 
-
+				personaje2.name = "Jugador2";
 				scene.add(personaje2);
-
 				jugadores.push(personaje2);
-				actions1.push(action1);
-				actions1.push(action2);
-				actions1.push(action3);
-				actions1.push(action4);
+
+				mixers_2[0].addEventListener('finished', aber);
 			});
 
 			render();
 
 			document.addEventListener('keydown', onKeyDown);
 			document.addEventListener('keyup', onKeyUp);
+
+
 		});
+
+		window.addEventListener("gamepadconnected", (event) => {
+			console.log("A gamepad connected:");
+			console.log(event.gamepad);
+		});
+
+		window.addEventListener("gamepaddisconnected", (event) => {
+			console.log("A gamepad disconnected:");
+			console.log(event.gamepad);
+		});
+
+		function aber() {
+			if (!gohanDead) {
+				flag = false;
+				actionIdle.play();
+				gohanStates = "idle";
+				chaosHit = false;
+				console.log("a");
+			} else {
+				cancelAnimationFrame(req);
+				req = undefined;
+				$(".gameover").css("visibility", "visible");
+				volume = 0.2;
+				console.log(volume);
+			}
+
+		}
+
+		function aber2() {
+			if (!chaosDead) {
+				flagC = false;
+				actionIdleC.play();
+				chaosStates = "idle";
+				gohanHit = false;
+				console.log("b");
+			} else {
+				cancelAnimationFrame(req);
+				req = undefined;
+				$(".gameover").css("visibility", "visible");
+				volume = 0.2;
+				console.log(volume);
+			}
+		}
 
 		function loadOBJWithMTL(path, objFile, mtlFile, onLoadCallback) {
 			var mtlLoader = new THREE.MTLLoader();
@@ -233,40 +406,299 @@
 
 			});
 		}
+		function VolverReiniciar() {
+			location.replace("Japon.html");
+
+		}
+
+		function VolverMenu() {
+			location.replace("index.html");
+
+		}
 
 		function onKeyDown(event) {
 			keys[String.fromCharCode(event.keyCode)] = true;
+			if (!chaosDead && !gohanDead) {
+				if (String.fromCharCode(event.keyCode) == "A") {
+					if (!flagC) {
+						mixers[0].stopAllAction();
+						actionbackwardC.time = 7;
+						actionbackwardC.play();
+						flagC = true;
+					}
+					if (actionbackwardC.time >= 0 && actionbackwardC.time <= 0.10) {
+						actionbackwardC.time = 7;
+					}
+				}
+				if (String.fromCharCode(event.keyCode) == "D") {
+					if (!flagC) {
+						mixers[0].stopAllAction();
+						actionforwardC.time = 5.5;
+						actionforwardC.play();
+						flagC = true;
+					}
+					if (actionforwardC.time >= 0 && actionforwardC.time <= 0.15) {
+						actionforwardC.time = 5.5;
+					}
+				}
+				if (String.fromCharCode(event.keyCode) == "Q") {
+					if (!flagC) {
+						mixers[0].stopAllAction();
+						actionPunch1C.time = 11.5;
+						actionPunch1C.play();
+						flagC = true;
+						chaosStates = "attacking";
+					}
+				}
+				if (String.fromCharCode(event.keyCode) == "E") {
+					if (!flagC) {
+						mixers[0].stopAllAction();
+						actionPunch2C.time = 13.5;
+						actionPunch2C.play();
+						flagC = true;
+						chaosStates = "attacking";
+					}
+				}
+				if (String.fromCharCode(event.keyCode) == "Z") {
+					if (!flagC) {
+						mixers[0].stopAllAction();
+						actionKick1C.time = 15;
+						actionKick1C.play();
+						flagC = true;
+						chaosStates = "attacking";
+					}
+				}
+				if (String.fromCharCode(event.keyCode) == "C") {
+					if (!flagC) {
+						mixers[0].stopAllAction();
+						actionKick2C.time = 17.5;
+						actionKick2C.play();
+						flagC = true;
+						chaosStates = "attacking";
+					}
+				}
+				//
+				if (String.fromCharCode(event.keyCode) == "d") {
+					if (!flag) {
+						mixers_2[0].stopAllAction();
+						actionforward.time = 5;
+						actionforward.play();
+						flag = true;
+					}
+					if (actionforward.time >= 0 && actionforward.time <= 0.15) {
+						actionforward.time = 5;
+					}
+				}
+				if (String.fromCharCode(event.keyCode) == "f") {
+					if (!flag) {
+						mixers_2[0].stopAllAction();
+						actionbackward.time = 6;
+						actionbackward.play();
+						flag = true;
+					}
+					if (actionbackward.time >= 0 && actionbackward.time <= 0.10) {
+						actionbackward.time = 6;
+					}
+				}
+				if (String.fromCharCode(event.keyCode) == "g") {
+					if (!flag) {
+						mixers_2[0].stopAllAction();
+						actionPunch1.time = 7;
+						actionPunch1.play();
+						flag = true;
+						gohanStates = "attacking";
+					}
+				}
+				if (String.fromCharCode(event.keyCode) == "i") {
+					if (!flag) {
+						mixers_2[0].stopAllAction();
+						actionPunch2.time = 8;
+						actionPunch2.play();
+						flag = true;
+						gohanStates = "attacking";
+					}
+				}
+				if (String.fromCharCode(event.keyCode) == "a") {
+					if (!flag) {
+						mixers_2[0].stopAllAction();
+						actionKick1.time = 9.5;
+						actionKick1.play();
+						flag = true;
+						gohanStates = "attacking";
+					}
+				}
+				if (String.fromCharCode(event.keyCode) == "c") {
+					if (!flag) {
+						mixers_2[0].stopAllAction();
+						actionKick2.time = 11.5;
+						actionKick2.play();
+						flag = true;
+						gohanStates = "attacking";
+					}
+				}
+				if (String.fromCharCode(event.keyCode) == "P") {
+					paused = !paused;
+					$(".pausa1").css("visibility", "hidden");
+				}
+			}
 		}
 		function onKeyUp(event) {
 			keys[String.fromCharCode(event.keyCode)] = false;
+			if (!chaosDead && !gohanDead) {
+				if (String.fromCharCode(event.keyCode) == "d" || String.fromCharCode(event.keyCode) == "f") {
+					flag = false;
+					mixers_2[0].stopAllAction();
+					actionIdle.play();
+				}
+				if (String.fromCharCode(event.keyCode) == "A" || String.fromCharCode(event.keyCode) == "D") {
+					flagC = false;
+					mixers[0].stopAllAction();
+					actionIdleC.play();
+				}
+				if (String.fromCharCode(event.keyCode) == "P") {
+					if (paused) {
+						cancelAnimationFrame(req);
+						req = undefined;
+						$(".pausa1").css("visibility", "visible");
+						volume = 0.2;
+						console.log(volume);
+					} else {
+						if (!req) {
+							render();
+						}
+					}
+				}
+			}
+
 		}
 
 
+
 		function render() {
-			requestAnimationFrame(render);
+			req = requestAnimationFrame(render);
 			deltaTime = clock.getDelta();
-			lifebar1 = scene.getObjectByName("bar1");
-			lifebar2 = scene.getObjectByName("bar2");
-			greenbar1 = scene.getObjectByName("hp1");
-			greenbar2 = scene.getObjectByName("hp2");
 
 
-			var forward = 0;
 
-			if (keys["A"]) {
-				forward = -20;
-			} else if (keys["D"]) {
-				forward = 20;
+			var loadComplete = false;
+
+			for (var h = 0; h < isWorldReady.length; h++) {
+				if (!isWorldReady[h]) {
+					loadComplete = false;
+					break;
+				}
+				loadComplete = true;
 			}
 
-			if (isWorldReady[0] && isWorldReady[1]) {
+			if (loadComplete) {
+				//
+				if (gohanLife <= 0 && !gohanDead) {
+					console.log("Gohan se muere");
+					gohanDead = true;
+					mixers_2[0].stopAllAction();
+					mixers[0].stopAllAction();
+					actionVictoryC.play();
+					actionVictoryC.time = 22;
+					actionDefeat.play();
+					actionDefeat.time = 21;
+				}
 
-				//camera.rotation.y += yaw * deltaTime;
-				camera.translateX(forward * deltaTime);
-				lifebar1.translateX(forward * deltaTime);
-				lifebar2.translateX(forward * deltaTime);
-				greenbar1.translateX(forward * deltaTime);
-				greenbar2.translateX(forward * deltaTime);
+				if (actionVictoryC.time >= 0 && actionVictoryC.time <= 0.1) {
+					actionVictoryC.time = 22;
+				}
+
+				if (actionDefeat.time >= 0 && actionDefeat.time <= 0.1) {
+					actionDefeat.time = 21;
+				}
+
+				if (chaosLife <= 0 && !chaosDead) {
+					chaosDead = true;
+					mixers[0].stopAllAction();
+					mixers_2[0].stopAllAction();
+					actionVictory.play();
+					actionVictory.time = 18;
+					actionDefeatC.play();
+					actionDefeatC.time = 25;
+				}
+
+				if (actionVictory.time >= 0 && actionVictory.time <= 0.1) {
+					actionVictory.time = 18;
+				}
+
+				if (actionDefeatC.time >= 0 && actionDefeatC.time <= 0.1) {
+					actionDefeatC.time = 25;
+				}
+				//
+				//ANIMACION PERSONAJE 1
+				if (mixers.length > 0) {
+					for (var i = 0; i < mixers.length; i++) {
+						mixers[i].update(deltaTime);
+					}
+
+				}
+
+				//ANIMACION PERSONAJE 2
+				if (mixers_2.length > 0) {
+					for (var i = 0; i < mixers_2.length; i++) {
+						mixers_2[i].update(deltaTime);
+					}
+
+				}
+				var forward = 0;
+				var forward2 = 0;
+				var forward3 = 0;
+				lifebar1 = scene.getObjectByName("bar1");
+				lifebar2 = scene.getObjectByName("bar2");
+				greenbar1 = scene.getObjectByName("hp1");
+				greenbar2 = scene.getObjectByName("hp2");
+
+
+				cuboHitGohan = scene.getObjectByName("cuboHit2");
+				cuboHitChaos = scene.getObjectByName("cuboHit1");
+
+				if (!chaosDead && !gohanDead) {
+					if (keys["A"] || button[2]) {
+						forward = -5;
+					} else if (keys["D"]) {
+						forward = 5;
+
+					}
+
+					if (keys["d"]) {
+						forward2 = 5;
+						//flag = true;
+					} else if (keys["f"]) {
+						forward2 = -5;
+					}
+				}
+
+				if (keys["'"]) {
+					forward3 = 20;
+
+				} else if (keys["%"]) {
+
+					forward3 = -20;
+				}
+
+				movements[1] = forward;
+				movements[0] = forward2;
+				//
+				//console.log("Chaos State: "+chaosStates);
+				jugadores[0].translateZ(movements[0] * deltaTime);
+				jugadores[1].translateZ(movements[1] * deltaTime);
+				cuboHitChaos.position.x = jugadores[1].position.x;
+				//cuboHitChaos.position.y = jugadores[1].position.y;
+				cuboHitChaos.position.z = jugadores[1].position.z;
+				cuboHitGohan.position.x = jugadores[0].position.x;
+				//cuboHitGohan.position.y = jugadores[0].position.y;
+				cuboHitGohan.position.z = jugadores[0].position.z;
+				camera.translateX(forward3 * deltaTime);
+				lifebar1.translateX(forward3 * deltaTime);
+				lifebar2.translateX(forward3 * deltaTime);
+				greenbar1.translateX(forward3 * deltaTime);
+				greenbar2.translateX(forward3 * deltaTime);
+
+				const prueba = false;
 
 				for (var i = 0; i < camera.misRayos.length; i++) {
 
@@ -282,18 +714,88 @@
 					if (colisiones.length > 0) {
 
 						if (colisiones[0].distance < 1) {
-
-							//scene.remove(colisiones[0].object.parent);
-							camera.translateX(-(forward * deltaTime));
-							lifebar1.translateX(-(forward * deltaTime));
-							lifebar2.translateX(-(forward * deltaTime));
-							greenbar1.translateX(-(forward * deltaTime));
-							greenbar2.translateX(-(forward * deltaTime));
+							camera.translateX(-(forward3 * deltaTime));
+							lifebar1.translateX(-(forward3 * deltaTime));
+							lifebar2.translateX(-(forward3 * deltaTime));
+							greenbar1.translateX(-(forward3 * deltaTime));
+							greenbar2.translateX(-(forward3 * deltaTime));
 
 							console.log("Estamos colisionando con algo");
 						}
 					}
 
+				}
+
+				for (var i = 0; i < cuboHitGohan.misRayos.length; i++) {
+					var rayo = cuboHitGohan.misRayos[i];
+
+					rayCaster.set(cuboHitGohan.position, rayo);
+
+					var colisiones = rayCaster.intersectObjects(
+						colisionHitBoxes,
+						true
+					);
+
+					if (colisiones.length > 0) {
+						if (colisiones[0].distance < 1 && chaosStates == "attacking") {
+							if (!gohanHit) {
+								gohanHit = true;
+								gohanLife -= 0.1;
+								greenbar2.scale.x *= gohanLife;
+							}
+						}
+					}
+				}
+
+				for (var i = 0; i < cuboHitChaos.misRayos.length; i++) {
+					var rayo = cuboHitChaos.misRayos[i];
+
+					rayCaster.set(cuboHitChaos.position, rayo);
+
+					var colisiones = rayCaster.intersectObjects(
+						colisionHitBoxes,
+						true
+					);
+
+					if (colisiones.length > 0) {
+
+						if (colisiones[0].distance < 1 && gohanStates == "attacking") {
+							if (!chaosHit) {
+								chaosHit = true;
+								chaosLife -= 0.1;
+								greenbar1.scale.x *= chaosLife;
+							}
+						}
+					}
+				}
+
+				for (var j = 0; j < jugadores.length; j++) {
+					for (var i = 0; i < jugadores[j].misRayos.length; i++) {
+
+						var rayo = jugadores[j].misRayos[i];
+
+						rayCaster.set(jugadores[j].position, rayo);
+
+						var colisiones = rayCaster.intersectObjects(
+							objectosConColision,
+							true
+						);
+
+						if (colisiones.length > 0) {
+							for (var z = 0; z < colisiones.length; z++) {
+								if (colisiones[z].distance < 0.005) {
+									console.log("a");
+								}
+							}
+
+
+							if (colisiones[0].distance < 1) {
+								jugadores[j].translateZ(-(movements[j] * deltaTime));
+								//console.log("Estamos colisionando con algo");
+							}
+						}
+
+					}
 				}
 			}
 
@@ -327,6 +829,8 @@
 			grid.position.y = -1;
 			scene.add(grid);
 
+
+
 			$("#scene-section").append(renderer.domElement);
 		}
 
@@ -335,9 +839,55 @@
 </head>
 
 <body>
-
-	<div id="scene-section" />
+	<div class="pausa1">
+		<br>
+		<br>
+		<br>
+		<button onclick="VolverMenu()" class="btn btn-VolverMenu">Volver al menu </button>
+		<button onclick="VolverReiniciar()" class="btn btn-Reiniciar">Reiniciar</button>
+	</div>
+	<div class="gameover">
+		<br>
+		<br>
+		<br>
+		<button onclick="VolverMenu()" class="btn btn-VolverMenu">Volver al menu </button>
+		<button onclick="VolverReiniciar()" class="btn btn-Reiniciar">Reiniciar</button>
+	</div>
+	<style>
+		.pausa1 {
+			position: absolute;
+			background-image: url("/Buttons/Pausa.png");
+			background-size: cover;
+			background-repeat: no-repeat;
+			background-position: center;
+			background-color: rgba(0, 0, 0, .5);
+			z-index: 100;
+			position: fixed;
+			visibility: hidden;
+			width: 20%;
+			height: auto;
+			top: 2%;
+			left: 2%;
+		}
+	</style>
+	<style>
+		.gameover {
+			position: absolute;
+			background-image: url("/Buttons/Pausa.png");
+			/* Aqui cambiar para la imagen del GameOver xd*/
+			background-size: cover;
+			background-repeat: no-repeat;
+			background-position: center;
+			background-color: rgba(0, 0, 0, .5);
+			z-index: 100;
+			position: fixed;
+			visibility: hidden;
+			width: 20%;
+			height: auto;
+			top: 2%;
+			left: 2%;
+		}
+	</style>
+	<div id="scene-section"></div>
 
 </body>
-
-</html>
